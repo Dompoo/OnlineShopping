@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @ControllerAdvice
@@ -19,18 +17,14 @@ public class ExceptionController {
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody //Model을 view로 변환하지 않고 그대로 반환하도록 만들어줌.
     public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
 
         ErrorResponse response = new ErrorResponse("400", "잘못된 요청입니다.");
-
         for (FieldError fieldError : e.getFieldErrors()) {
             response.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }
-
         return response;
-
-
     }
 }
