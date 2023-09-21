@@ -1,5 +1,7 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.domain.Product;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +19,44 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Test
     @DisplayName("/addProduct 요청시 {}를 출력한다.")
     void test() throws Exception {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다,")
+                .price(10000)
+                .build();
+        String json = objectMapper.writeValueAsString(product);
+
         //expected
         mockMvc.perform(post("/addProduct")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"productName\": \"상품이름입니다.\", \"price\": \"10000\"}")
-                ) // Content-Type : applcation/json
+                        .content(json)
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().string("{}"))
                 .andDo(print());
     }
 
     @Test
-    @DisplayName("/addProduct 요청시 title값은 필수다.")
+    @DisplayName("/addProduct 요청시 productName값은 필수다.")
     void test2() throws Exception {
+        //given
+        Product product = Product.builder()
+                .price(10000)
+                .build();
+        String json = objectMapper.writeValueAsString(product);
+
         //expected
         mockMvc.perform(post("/addProduct")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"productName\": null, \"price\": \"10000\"}")
+                        .content(json)
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
