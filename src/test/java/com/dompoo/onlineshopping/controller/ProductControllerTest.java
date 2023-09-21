@@ -3,7 +3,8 @@ package com.dompoo.onlineshopping.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -11,7 +12,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest
+@AutoConfigureMockMvc
+@SpringBootTest
 class ProductControllerTest {
 
     @Autowired
@@ -31,7 +33,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("/posts 요청시 title값은 필수다.")
+    @DisplayName("/addProduct 요청시 title값은 필수다.")
     void test2() throws Exception {
         //expected
         mockMvc.perform(post("/addProduct")
