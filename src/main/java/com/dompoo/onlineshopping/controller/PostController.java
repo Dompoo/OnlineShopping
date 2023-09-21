@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -19,9 +17,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public Map<String, String> post(@RequestBody @Valid PostCreateRequest request) {
-
+    public void post(@RequestBody @Valid PostCreateRequest request) {
         postService.write(request);
-        return Map.of();
     }
 }

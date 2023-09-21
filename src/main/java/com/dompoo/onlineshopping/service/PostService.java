@@ -16,10 +16,11 @@ public class PostService {
 
     public void write(PostCreateRequest postCreateRequest) {
 
-        postRepository.save(Post.builder()
+        Post post = Post.builder()
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
-                .build()
-        );
+                .build();
+
+        postRepository.save(post);
     }
 }
