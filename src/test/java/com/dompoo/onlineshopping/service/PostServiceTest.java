@@ -3,6 +3,7 @@ package com.dompoo.onlineshopping.service;
 import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.repository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
+import com.dompoo.onlineshopping.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,11 +58,30 @@ class PostServiceTest {
         Post savedPost = postRepository.save(post);
 
         //when
-        Post findPost = postService.get(savedPost.getId());
+        PostResponse findPost = postService.get(savedPost.getId());
 
         //then
         assertNotNull(findPost);
-        assertEquals("글제목입니다.", post.getTitle());
-        assertEquals("글내용입니다.", post.getContent());
+        assertEquals("글제목입니다.", findPost.getTitle());
+        assertEquals("글내용입니다.", findPost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 1개 조회시 글제목은 최대 10글자이다.")
+    void get2() {
+        //given
+        Post post = Post.builder()
+                .title("12345678901234567890")
+                .content("글내용입니다.")
+                .build();
+        Post savedPost = postRepository.save(post);
+
+        //when
+        PostResponse findPost = postService.get(savedPost.getId());
+
+        //then
+        assertNotNull(findPost);
+        assertEquals("1234567890", findPost.getTitle());
+        assertEquals("글내용입니다.", findPost.getContent());
     }
 }

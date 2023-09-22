@@ -1,7 +1,7 @@
 package com.dompoo.onlineshopping.controller;
 
-import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
+import com.dompoo.onlineshopping.response.PostResponse;
 import com.dompoo.onlineshopping.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable Long postId) {
+    public PostResponse get(@PathVariable Long postId) {
         return postService.get(postId);
     }
 }
