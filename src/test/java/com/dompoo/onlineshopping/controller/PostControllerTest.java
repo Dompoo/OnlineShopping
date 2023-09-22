@@ -4,6 +4,7 @@ import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.repository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -120,6 +121,32 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("글제목입니다."))
                 .andExpect(jsonPath("$.content").value("글내용입니다."))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("글 여러개 조회")
+    void test5() throws Exception {
+        //given
+        Post post1 = postRepository.save(Post.builder()
+                .title("글1제목입니다.")
+                .content("글1내용입니다.")
+                .build());
+        Post post2 = postRepository.save(Post.builder()
+                .title("글2제목입니다.")
+                .content("글2내용입니다.")
+                .build());
+
+        //expected
+        mockMvc.perform(get("/posts"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", Matchers.is(2)))
+                .andExpect(jsonPath("$[0].id").value(post1.getId()))
+                .andExpect(jsonPath("$[0].title").value("글1제목입니다."))
+                .andExpect(jsonPath("$[0].content").value("글1내용입니다."))
+                .andExpect(jsonPath("$[1].id").value(post2.getId()))
+                .andExpect(jsonPath("$[1].title").value("글2제목입니다."))
+                .andExpect(jsonPath("$[1].content").value("글2내용입니다."))
                 .andDo(print());
     }
 }
