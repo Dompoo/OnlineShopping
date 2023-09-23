@@ -141,7 +141,31 @@ class PostControllerTest {
         postRepository.saveAll(requestPosts);
 
         //expected
-        mockMvc.perform(get("/posts?page=0&sort=id,desc"))
+        mockMvc.perform(get("/posts?page=1&size=5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(5)))
+                .andExpect(jsonPath("$[0].title").value("제목 30"))
+                .andExpect(jsonPath("$[0].content").value("내용 30"))
+                .andExpect(jsonPath("$[4].title").value("제목 26"))
+                .andExpect(jsonPath("$[4].content").value("내용 26"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("글 여러개 조회시 페이지를 0으로 요청해도 첫 페이지를 가져온다.")
+    void test6() throws Exception {
+        //given
+        List<Post> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i -> Post.builder()
+                        .title("제목 " + i)
+                        .content("내용 " + i)
+                        .build()
+                )
+                .toList();
+        postRepository.saveAll(requestPosts);
+
+        //expected
+        mockMvc.perform(get("/posts?page=0&size=5"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(5)))
                 .andExpect(jsonPath("$[0].title").value("제목 30"))

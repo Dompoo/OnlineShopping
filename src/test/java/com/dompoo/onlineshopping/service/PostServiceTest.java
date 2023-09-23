@@ -3,20 +3,19 @@ package com.dompoo.onlineshopping.service;
 import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.repository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
+import com.dompoo.onlineshopping.request.PostSearch;
 import com.dompoo.onlineshopping.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @SpringBootTest
 class PostServiceTest {
@@ -103,14 +102,13 @@ class PostServiceTest {
                 .toList();
         postRepository.saveAll(requestPosts);
 
-        PageRequest pageRequest = PageRequest.of(0, 5, DESC, "id");
-
+        PostSearch postSearch = PostSearch.builder().page(1).size(10).build();
 
         //when
-        List<PostResponse> findPosts = postService.getList(pageRequest);
+        List<PostResponse> findPosts = postService.getList(postSearch);
 
         //then
-        assertEquals(5L, findPosts.size());
+        assertEquals(10L, findPosts.size());
         assertEquals("제목 30", findPosts.get(0).getTitle());
         assertEquals("제목 26", findPosts.get(4).getTitle());
     }
