@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.response;
+package com.dompoo.onlineshopping.exception;
 
 import lombok.Builder;
 import lombok.Getter;

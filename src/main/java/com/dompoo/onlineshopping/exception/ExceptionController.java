@@ -1,6 +1,5 @@
-package com.dompoo.onlineshopping.controller;
+package com.dompoo.onlineshopping.exception;
 
-import com.dompoo.onlineshopping.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
