@@ -1,6 +1,7 @@
 package com.dompoo.onlineshopping.controller;
 
 import com.dompoo.onlineshopping.request.PostCreateRequest;
+import com.dompoo.onlineshopping.request.PostEditRequest;
 import com.dompoo.onlineshopping.request.PostSearch;
 import com.dompoo.onlineshopping.response.PostResponse;
 import com.dompoo.onlineshopping.service.PostService;
@@ -31,5 +32,10 @@ public class PostController {
     @GetMapping("/posts")
     public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
         return postService.getList(postSearch);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public void patch(@PathVariable Long postId, @RequestBody @Valid PostEditRequest postEditRequest) {
+        postService.edit(postId, postEditRequest);
     }
 }

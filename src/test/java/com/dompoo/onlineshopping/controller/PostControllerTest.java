@@ -3,6 +3,7 @@ package com.dompoo.onlineshopping.controller;
 import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.repository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
+import com.dompoo.onlineshopping.request.PostEditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +19,7 @@ import java.util.stream.IntStream;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -172,6 +172,28 @@ class PostControllerTest {
                 .andExpect(jsonPath("$[0].content").value("내용 30"))
                 .andExpect(jsonPath("$[4].title").value("제목 26"))
                 .andExpect(jsonPath("$[4].content").value("내용 26"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test7() throws Exception {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        PostEditRequest postEditRequest = PostEditRequest.builder()
+                .title("새로운글제목입니다.")
+                .build();
+
+        //expected
+        mockMvc.perform(patch("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEditRequest)))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }

@@ -3,6 +3,7 @@ package com.dompoo.onlineshopping.service;
 import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.repository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
+import com.dompoo.onlineshopping.request.PostEditRequest;
 import com.dompoo.onlineshopping.request.PostSearch;
 import com.dompoo.onlineshopping.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,5 +112,53 @@ class PostServiceTest {
         assertEquals(10L, findPosts.size());
         assertEquals("제목 30", findPosts.get(0).getTitle());
         assertEquals("제목 26", findPosts.get(4).getTitle());
+    }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void edit() {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        PostEditRequest postEditRequest = PostEditRequest.builder()
+                .title("새로운글제목입니다.")
+                .build();
+
+        //when
+        postService.edit(post.getId(), postEditRequest);
+
+        //then
+        Post changedPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
+        assertEquals("새로운글제목입니다.", changedPost.getTitle());
+        assertEquals("글내용입니다.", changedPost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void edit2() {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        PostEditRequest postEditRequest = PostEditRequest.builder()
+                .content("새로운글내용입니다.")
+                .build();
+
+        //when
+        postService.edit(post.getId(), postEditRequest);
+
+        //then
+        Post changedPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
+        assertEquals("글제목입니다.", changedPost.getTitle());
+        assertEquals("새로운글내용입니다.", changedPost.getContent());
     }
 }
