@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionController {
 
-
+    @ResponseBody //Model을 view로 변환하지 않고 그대로 반환하도록 만들어줌.
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody //Model을 view로 변환하지 않고 그대로 반환하도록 만들어줌.
     public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
-
         ErrorResponse response = ErrorResponse.builder()
                 .code("400")
                 .message("잘못된 요청입니다.")
@@ -30,5 +28,15 @@ public class ExceptionController {
         }
 
         return response;
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(PostNotFound.class)
+    public ErrorResponse postNotFound(PostNotFound e) {
+        return ErrorResponse.builder()
+                .code("404")
+                .message(e.getMessage())
+                .build();
     }
 }

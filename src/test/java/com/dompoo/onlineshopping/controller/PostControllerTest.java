@@ -44,7 +44,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청시 {}를 출력한다.")
-    void test() throws Exception {
+    void post1() throws Exception {
         //given
         PostCreateRequest request = PostCreateRequest.builder()
                 .title("글제목입니다.")
@@ -63,7 +63,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청시 title값은 필수다.")
-    void test2() throws Exception {
+    void post2() throws Exception {
         //given
         PostCreateRequest request = PostCreateRequest.builder()
                 .content("글내용입니다.")
@@ -84,7 +84,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts DB에 값이 저장된다.")
-    void test3() throws Exception {
+    void post3() throws Exception {
         //given
         PostCreateRequest request = PostCreateRequest.builder()
                 .title("글제목입니다.")
@@ -110,7 +110,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 1개 조회")
-    void test4() throws Exception {
+    void get1() throws Exception {
         //given
         Post post = Post.builder()
                 .title("글제목입니다.")
@@ -128,8 +128,24 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 글 1개 조회")
+    void get2() throws Exception {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        //expected
+        mockMvc.perform(get("/posts/{postId}", post.getId() + 1))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
     @DisplayName("글 여러개 조회")
-    void test5() throws Exception {
+    void getList1() throws Exception {
         //given
         List<Post> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Post.builder()
@@ -153,7 +169,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 여러개 조회시 페이지를 0으로 요청해도 첫 페이지를 가져온다.")
-    void test6() throws Exception {
+    void getList2() throws Exception {
         //given
         List<Post> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Post.builder()
@@ -177,7 +193,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 제목 수정")
-    void test7() throws Exception {
+    void patch1() throws Exception {
         //given
         Post post = Post.builder()
                 .title("글제목입니다.")
@@ -198,8 +214,30 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 글 수정")
+    void patch2() throws Exception {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        PostEditRequest postEditRequest = PostEditRequest.builder()
+                .title("새로운글제목입니다.")
+                .build();
+
+        //expected
+        mockMvc.perform(patch("/posts/{postId}", post.getId() + 1)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEditRequest)))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
     @DisplayName("글 삭제")
-    void test8() throws Exception {
+    void delete1() throws Exception {
         //given
         Post post = Post.builder()
                 .title("글제목입니다.")
@@ -210,6 +248,22 @@ class PostControllerTest {
         //expected
         mockMvc.perform(delete("/posts/{postId}", post.getId()))
                 .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 글 삭제")
+    void delete2() throws Exception {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        //expected
+        mockMvc.perform(delete("/posts/{postId}", post.getId() + 1))
+                .andExpect(status().isNotFound())
                 .andDo(print());
     }
 }
