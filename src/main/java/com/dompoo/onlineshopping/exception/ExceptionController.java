@@ -32,8 +32,8 @@ public class ExceptionController {
     }
 
     @ResponseBody
-    @ExceptionHandler(PageException.class)
-    public ResponseEntity<ErrorResponse> pageException(PageException e) {
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<ErrorResponse> postException(PostException e) {
         ErrorResponse errorBody = ErrorResponse.builder()
                 .code(e.statusCode())
                 .message(e.getMessage())
