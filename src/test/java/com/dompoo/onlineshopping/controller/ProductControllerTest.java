@@ -3,6 +3,7 @@ package com.dompoo.onlineshopping.controller;
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,11 @@ class ProductControllerTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @BeforeEach
+    void clean() {
+        productRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("/products 요청시 {}를 출력한다.")
