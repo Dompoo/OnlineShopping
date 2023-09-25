@@ -37,6 +37,7 @@ public class ExceptionController {
         ErrorResponse errorBody = ErrorResponse.builder()
                 .code(e.statusCode())
                 .message(e.getMessage())
+                .validation(e.getValidation())
                 .build();
 
         return ResponseEntity.status(Integer.parseInt(e.statusCode()))

@@ -9,6 +9,11 @@ public class PostNotFound extends PostException {
         super(MESSAGE);
     }
 
+    public PostNotFound(String fieldName, String message) {
+        super(MESSAGE);
+        addValidatioin(fieldName, message);
+    }
+
     @Override
     public String statusCode() {
         return STATUS_CODE;
