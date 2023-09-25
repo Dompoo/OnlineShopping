@@ -3,9 +3,13 @@ package com.dompoo.onlineshopping.service;
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.repository.ProductRepository;
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
+import com.dompoo.onlineshopping.request.ProductSearch;
 import com.dompoo.onlineshopping.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +36,11 @@ public class ProductService {
                 .productName(findProduct.getProductName())
                 .price(findProduct.getPrice())
                 .build();
+    }
+
+    public List<ProductResponse> getList(ProductSearch productSearch) {
+        return productRepository.getList(productSearch).stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
     }
 }

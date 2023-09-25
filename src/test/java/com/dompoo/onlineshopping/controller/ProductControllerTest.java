@@ -11,6 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -111,6 +115,54 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.id").value(product.getId()))
                 .andExpect(jsonPath("$.productName").value("상품이름입니다."))
                 .andExpect(jsonPath("$.price").value(10000))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("상품 여러개 조회")
+    void test5() throws Exception {
+        //given
+        List<Product> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i -> Product.builder()
+                        .productName("상품 " + i)
+                        .price(i * 1000)
+                        .build()
+                )
+                .toList();
+        productRepository.saveAll(requestPosts);
+
+        //expected
+        mockMvc.perform(get("/products?page=1&size=5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(5)))
+                .andExpect(jsonPath("$[0].productName").value("상품 30"))
+                .andExpect(jsonPath("$[0].price").value(30000))
+                .andExpect(jsonPath("$[4].productName").value("상품 26"))
+                .andExpect(jsonPath("$[4].price").value(26000))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("상품 여러개 조회시 페이지를 0으로 조회해도 첫 페이지를 가져온다.")
+    void test6() throws Exception {
+        //given
+        List<Product> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i -> Product.builder()
+                        .productName("상품 " + i)
+                        .price(i * 1000)
+                        .build()
+                )
+                .toList();
+        productRepository.saveAll(requestPosts);
+
+        //expected
+        mockMvc.perform(get("/products?page=0&size=5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(5)))
+                .andExpect(jsonPath("$[0].productName").value("상품 30"))
+                .andExpect(jsonPath("$[0].price").value(30000))
+                .andExpect(jsonPath("$[4].productName").value("상품 26"))
+                .andExpect(jsonPath("$[4].price").value(26000))
                 .andDo(print());
     }
 
