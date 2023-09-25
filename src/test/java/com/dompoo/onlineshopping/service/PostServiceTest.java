@@ -15,8 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PostServiceTest {
@@ -103,7 +102,10 @@ class PostServiceTest {
                 .toList();
         postRepository.saveAll(requestPosts);
 
-        PostSearch postSearch = PostSearch.builder().page(1).size(10).build();
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
 
         //when
         List<PostResponse> findPosts = postService.getList(postSearch);
@@ -160,5 +162,28 @@ class PostServiceTest {
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
         assertEquals("글제목입니다.", changedPost.getTitle());
         assertEquals("새로운글내용입니다.", changedPost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 삭제")
+    void delete() {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
+
+        //when
+        postService.delete(post.getId());
+
+        //then
+        assertThrows(IllegalArgumentException.class, () -> postService.get((post.getId())));
+        assertEquals(0, postService.getList(postSearch).size());
     }
 }
