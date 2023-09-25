@@ -90,6 +90,23 @@ class PostServiceTest {
     }
 
     @Test
+    @DisplayName("글 1개 조회 실패")
+    void get3() {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        Post savedPost = postRepository.save(post);
+
+        //expected
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                postService.get(savedPost.getId() + 1)
+        );
+        assertEquals("존재하지 않는 글입니다.", e.getMessage());
+    }
+
+    @Test
     @DisplayName("글 여러개 조회")
     void getList() {
         //given
@@ -174,16 +191,26 @@ class PostServiceTest {
                 .build();
         postRepository.save(post);
 
-        PostSearch postSearch = PostSearch.builder()
-                .page(1)
-                .size(10)
-                .build();
-
         //when
         postService.delete(post.getId());
 
         //then
-        assertThrows(IllegalArgumentException.class, () -> postService.get((post.getId())));
         assertEquals(0, postRepository.count());
+    }
+
+    @Test
+    @DisplayName("글 삭제 실패")
+    void delete2() {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        //expected
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                postService.delete(post.getId() + 1));
+        assertEquals("존재하지 않는 글입니다.", e.getMessage());
     }
 }
