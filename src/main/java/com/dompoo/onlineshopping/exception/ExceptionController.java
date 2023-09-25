@@ -2,6 +2,7 @@ package com.dompoo.onlineshopping.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,12 +32,14 @@ public class ExceptionController {
     }
 
     @ResponseBody
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(PostNotFound.class)
-    public ErrorResponse postNotFound(PostNotFound e) {
-        return ErrorResponse.builder()
-                .code("404")
+    @ExceptionHandler(PageException.class)
+    public ResponseEntity<ErrorResponse> pageException(PageException e) {
+        ErrorResponse errorBody = ErrorResponse.builder()
+                .code(e.statusCode())
                 .message(e.getMessage())
                 .build();
+
+        return ResponseEntity.status(Integer.parseInt(e.statusCode()))
+                .body(errorBody);
     }
 }
