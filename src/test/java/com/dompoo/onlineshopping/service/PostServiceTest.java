@@ -184,6 +184,6 @@ class PostServiceTest {
 
         //then
         assertThrows(IllegalArgumentException.class, () -> postService.get((post.getId())));
-        assertEquals(0, postService.getList(postSearch).size());
+        assertEquals(0, postRepository.count());
     }
 }
