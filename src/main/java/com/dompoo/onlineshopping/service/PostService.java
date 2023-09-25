@@ -2,6 +2,7 @@ package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.domain.PostEditor;
+import com.dompoo.onlineshopping.exception.PostNotFound;
 import com.dompoo.onlineshopping.repository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
@@ -33,7 +34,7 @@ public class PostService {
 
     public PostResponse get(Long postId) {
         Post findPost = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(PostNotFound::new);
 
         return PostResponse.builder()
                 .id(findPost.getId())
@@ -51,7 +52,7 @@ public class PostService {
     @Transactional
     public void edit(Long postId, PostEditRequest postEdit) {
         Post findPost = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(PostNotFound::new);
 
         PostEditor.PostEditorBuilder editorBuilder = findPost.toEditor();
 
@@ -67,7 +68,8 @@ public class PostService {
     }
 
     public void delete(Long postId) {
-        Post findPost = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+        Post findPost = postRepository.findById(postId)
+                .orElseThrow(PostNotFound::new);
         postRepository.delete(findPost);
     }
 }

@@ -1,6 +1,7 @@
 package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Post;
+import com.dompoo.onlineshopping.exception.PostNotFound;
 import com.dompoo.onlineshopping.repository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
@@ -100,7 +101,7 @@ class PostServiceTest {
         Post savedPost = postRepository.save(post);
 
         //expected
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+        PostNotFound e = assertThrows(PostNotFound.class, () ->
                 postService.get(savedPost.getId() + 1)
         );
         assertEquals("존재하지 않는 글입니다.", e.getMessage());
@@ -182,6 +183,26 @@ class PostServiceTest {
     }
 
     @Test
+    @DisplayName("글 수정 실패")
+    void edit3() {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        PostEditRequest postEditRequest = PostEditRequest.builder()
+                .title("새로운글제목입니다.")
+                .content("새로운글내용입니다.")
+                .build();
+
+        //expected
+        assertThrows(PostNotFound.class, () ->
+                postService.edit(post.getId() + 1, postEditRequest));
+    }
+
+    @Test
     @DisplayName("글 삭제")
     void delete() {
         //given
@@ -209,7 +230,7 @@ class PostServiceTest {
         postRepository.save(post);
 
         //expected
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+        PostNotFound e = assertThrows(PostNotFound.class, () ->
                 postService.delete(post.getId() + 1));
         assertEquals("존재하지 않는 글입니다.", e.getMessage());
     }
