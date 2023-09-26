@@ -98,7 +98,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("상품 수정")
+    @DisplayName("상품 전체 수정")
     void edit1() {
         //given
         Product product = Product.builder()
@@ -168,5 +168,22 @@ class ProductServiceTest {
         Product findProduct = productRepository.findById(product.getId()).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
         assertEquals("상품이름입니다.", findProduct.getProductName());
         assertEquals(20000, findProduct.getPrice());
+    }
+
+    @Test
+    @DisplayName("상품 삭제")
+    void delete() {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        productRepository.save(product);
+
+        //when
+        productService.delete(product.getId());
+
+        //then
+        assertEquals(0, productRepository.count());
     }
 }

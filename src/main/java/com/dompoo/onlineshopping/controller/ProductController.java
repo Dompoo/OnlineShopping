@@ -38,4 +38,9 @@ public class ProductController {
     public void patch(@PathVariable Long productId, @RequestBody @Valid ProductEditRequest productEditRequest) {
         productService.edit(productId, productEditRequest);
     }
+
+    @DeleteMapping("/products/{productId}")
+    public void delete(@PathVariable Long productId) {
+        productService.delete(productId);
+    }
 }

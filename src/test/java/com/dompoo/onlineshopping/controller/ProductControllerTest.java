@@ -174,7 +174,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품 수정")
-    void teset7() throws Exception {
+    void test7() throws Exception {
         //given
         Product product = Product.builder()
                 .productName("상품이름입니다.")
@@ -195,6 +195,22 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("상품 삭제")
+    void test8() throws Exception {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        productRepository.save(product);
+
+        //expected
+        mockMvc.perform(delete("/products/{productId}", product.getId()))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
