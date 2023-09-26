@@ -140,6 +140,8 @@ class PostControllerTest {
         //expected
         mockMvc.perform(get("/posts/{postId}", post.getId() + 1))
                 .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 글입니다."))
                 .andDo(print());
     }
 
@@ -232,6 +234,8 @@ class PostControllerTest {
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postEditRequest)))
                 .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 글입니다."))
                 .andDo(print());
     }
 
@@ -264,6 +268,8 @@ class PostControllerTest {
         //expected
         mockMvc.perform(delete("/posts/{postId}", post.getId() + 1))
                 .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 글입니다."))
                 .andDo(print());
     }
 }
