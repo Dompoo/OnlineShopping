@@ -43,4 +43,17 @@ public class ExceptionController {
         return ResponseEntity.status(Integer.parseInt(e.statusCode()))
                 .body(errorBody);
     }
+
+    @ResponseBody
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<ErrorResponse> productException(ProductException e) {
+        ErrorResponse errorBody = ErrorResponse.builder()
+                .code(e.statusCode())
+                .message(e.getMessage())
+                .validation(e.getValidation())
+                .build();
+
+        return ResponseEntity.status(Integer.parseInt(e.statusCode()))
+                .body(errorBody);
+    }
 }
