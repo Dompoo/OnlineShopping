@@ -2,6 +2,7 @@ package com.dompoo.onlineshopping.controller;
 
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.repository.ProductRepository;
+import com.dompoo.onlineshopping.request.ProductEditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +18,7 @@ import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -169,6 +169,33 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$[0].price").value(30000))
                 .andExpect(jsonPath("$[4].productName").value("상품 26"))
                 .andExpect(jsonPath("$[4].price").value(26000))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("상품 수정")
+    void teset7() throws Exception {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        productRepository.save(product);
+
+        ProductEditRequest productEditRequest =
+                ProductEditRequest.builder()
+                        .productName("새상품이름입니다.")
+                        .price(20000)
+                        .build();
+        String json = objectMapper.writeValueAsString(productEditRequest);
+
+
+        //expected
+        mockMvc.perform(patch("/products/{productId}", product.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 

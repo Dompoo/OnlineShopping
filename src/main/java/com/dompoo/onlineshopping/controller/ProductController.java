@@ -1,6 +1,7 @@
 package com.dompoo.onlineshopping.controller;
 
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
+import com.dompoo.onlineshopping.request.ProductEditRequest;
 import com.dompoo.onlineshopping.request.ProductSearch;
 import com.dompoo.onlineshopping.response.ProductResponse;
 import com.dompoo.onlineshopping.service.ProductService;
@@ -31,5 +32,10 @@ public class ProductController {
     @GetMapping("/products")
     public List<ProductResponse> getList(@ModelAttribute ProductSearch productSearch) {
         return productService.getList(productSearch);
+    }
+
+    @PatchMapping("/products/{productId}")
+    public void patch(@PathVariable Long productId, @RequestBody @Valid ProductEditRequest productEditRequest) {
+        productService.edit(productId, productEditRequest);
     }
 }

@@ -26,4 +26,15 @@ public class Product {
         this.productName = productName;
         this.price = price;
     }
+
+    public ProductEditor.ProductEditorBuilder toEditor() {
+        return ProductEditor.builder()
+                .productName(productName)
+                .price(price);
+    }
+
+    public void edit(ProductEditor productEditor) {
+        productName = productEditor.getProductName();
+        price = productEditor.getPrice();
+    }
 }
