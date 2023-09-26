@@ -1,6 +1,7 @@
 package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Product;
+import com.dompoo.onlineshopping.exception.ProductNotFound;
 import com.dompoo.onlineshopping.repository.ProductRepository;
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
@@ -15,8 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ProductServiceTest {
@@ -68,6 +68,22 @@ class ProductServiceTest {
         assertNotNull(findProduct);
         assertEquals("상품이름입니다.", findProduct.getProductName());
         assertEquals(10000, findProduct.getPrice());
+    }
+
+    @Test
+    @DisplayName("상품 1개 조회 실패")
+    void get2() {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        Product savedProduct = productRepository.save(product);
+
+        //expected
+        ProductNotFound e = assertThrows(ProductNotFound.class, () ->
+                productService.get(savedProduct.getId() + 1));
+        assertEquals("존재하지 않는 상품입니다.", e.getMessage());
     }
 
     @Test
@@ -171,6 +187,28 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품 수정 실패")
+    void edit4() {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        productRepository.save(product);
+
+        ProductEditRequest productEditRequest =
+                ProductEditRequest.builder()
+                        .productName("새상품이름입니다.")
+                        .price(20000)
+                        .build();
+
+        //expected
+        ProductNotFound e = assertThrows(ProductNotFound.class, () ->
+                productService.edit(product.getId() + 1, productEditRequest));
+        assertEquals("존재하지 않는 상품입니다.", e.getMessage());
+    }
+
+    @Test
     @DisplayName("상품 삭제")
     void delete() {
         //given
@@ -185,5 +223,21 @@ class ProductServiceTest {
 
         //then
         assertEquals(0, productRepository.count());
+    }
+
+    @Test
+    @DisplayName("상품 삭제 실패")
+    void delete2() {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        productRepository.save(product);
+
+        //expected
+        ProductNotFound e = assertThrows(ProductNotFound.class, () ->
+                productService.delete(product.getId() + 1));
+        assertEquals("존재하지 않는 상품입니다.", e.getMessage());
     }
 }

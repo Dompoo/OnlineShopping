@@ -2,6 +2,7 @@ package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.domain.ProductEditor;
+import com.dompoo.onlineshopping.exception.ProductNotFound;
 import com.dompoo.onlineshopping.repository.ProductRepository;
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
@@ -32,7 +33,7 @@ public class ProductService {
 
     public ProductResponse get(Long productId) {
         Product findProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+                .orElseThrow(ProductNotFound::new);
 
         return ProductResponse.builder()
                 .id(findProduct.getId())
@@ -50,7 +51,7 @@ public class ProductService {
     @Transactional
     public void edit(Long productId, ProductEditRequest productEdit) {
         Product findProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+                .orElseThrow(ProductNotFound::new);
 
         ProductEditor.ProductEditorBuilder editorBuilder = findProduct.toEditor();
 
@@ -67,7 +68,7 @@ public class ProductService {
 
     public void delete(Long productId) {
         Product findProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+                .orElseThrow(ProductNotFound::new);
         productRepository.delete(findProduct);
     }
 }

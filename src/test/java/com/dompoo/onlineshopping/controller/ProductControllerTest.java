@@ -43,7 +43,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("/products 요청시 {}를 출력한다.")
-    void test() throws Exception {
+    void addProduct1() throws Exception {
         //given
         Product product = Product.builder()
                 .productName("상품이름입니다.")
@@ -62,7 +62,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("/products 요청시 productName값은 필수다.")
-    void test2() throws Exception {
+    void addProduct2() throws Exception {
         //given
         Product product = Product.builder()
                 .price(10000)
@@ -83,7 +83,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("/products 요청시 DB에 저장된다.")
-    void test3() throws Exception {
+    void addProduct3() throws Exception {
         //given
         Product product = Product.builder()
                 .productName("상품이름입니다.")
@@ -108,7 +108,7 @@ class ProductControllerTest {
     
     @Test
     @DisplayName("상품 1개 조회")
-    void test4() throws Exception {
+    void get1() throws Exception {
         //given
         Product product = Product.builder()
                 .productName("상품이름입니다.")
@@ -125,8 +125,26 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품 1개 조회")
+    void get2() throws Exception {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        productRepository.save(product);
+
+        //expected
+        mockMvc.perform(get("/products/{productId}", product.getId() + 1))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 상품입니다."))
+                .andDo(print());
+    }
+
+    @Test
     @DisplayName("상품 여러개 조회")
-    void test5() throws Exception {
+    void getList1() throws Exception {
         //given
         List<Product> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Product.builder()
@@ -150,7 +168,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품 여러개 조회시 페이지를 0으로 조회해도 첫 페이지를 가져온다.")
-    void test6() throws Exception {
+    void getList2() throws Exception {
         //given
         List<Product> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Product.builder()
@@ -174,7 +192,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품 수정")
-    void test7() throws Exception {
+    void patch1() throws Exception {
         //given
         Product product = Product.builder()
                 .productName("상품이름입니다.")
@@ -189,7 +207,6 @@ class ProductControllerTest {
                         .build();
         String json = objectMapper.writeValueAsString(productEditRequest);
 
-
         //expected
         mockMvc.perform(patch("/products/{productId}", product.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -200,8 +217,36 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품 수정")
+    void patch2() throws Exception {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        productRepository.save(product);
+
+        ProductEditRequest productEditRequest =
+                ProductEditRequest.builder()
+                        .productName("새상품이름입니다.")
+                        .price(20000)
+                        .build();
+        String json = objectMapper.writeValueAsString(productEditRequest);
+
+        //expected
+        mockMvc.perform(patch("/products/{productId}", product.getId() + 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 상품입니다."))
+                .andDo(print());
+    }
+
+    @Test
     @DisplayName("상품 삭제")
-    void test8() throws Exception {
+    void delete1() throws Exception {
         //given
         Product product = Product.builder()
                 .productName("상품이름입니다.")
@@ -212,6 +257,24 @@ class ProductControllerTest {
         //expected
         mockMvc.perform(delete("/products/{productId}", product.getId()))
                 .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품 삭제")
+    void delete2() throws Exception {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        productRepository.save(product);
+
+        //expected
+        mockMvc.perform(delete("/products/{productId}", product.getId() + 1))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 상품입니다."))
                 .andDo(print());
     }
 
