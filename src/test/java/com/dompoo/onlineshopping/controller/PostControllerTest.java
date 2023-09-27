@@ -194,7 +194,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("글 제목 수정")
+    @DisplayName("글 제목 수정, DB값 변경")
     void patch1() throws Exception {
         //given
         Post post = Post.builder()
@@ -207,17 +207,53 @@ class PostControllerTest {
                 .title("새로운글제목입니다.")
                 .build();
 
-        //expected
+        //when
         mockMvc.perform(patch("/posts/{postId}", post.getId())
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postEditRequest)))
                 .andExpect(status().isOk())
                 .andDo(print());
+
+        //then
+        Post findPost = postRepository.findById(post.getId()).orElseThrow(
+                () -> new RuntimeException("글이 존재하지 않습니다.")
+        );
+        assertEquals("새로운글제목입니다.", findPost.getTitle());
+        assertEquals("글내용입니다.", findPost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정, DB값 변경")
+    void patch2() throws Exception {
+        //given
+        Post post = Post.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
+        postRepository.save(post);
+
+        PostEditRequest postEditRequest = PostEditRequest.builder()
+                .content("새로운글내용입니다.")
+                .build();
+
+        //when
+        mockMvc.perform(patch("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEditRequest)))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        //then
+        Post findPost = postRepository.findById(post.getId()).orElseThrow(
+                () -> new RuntimeException("글이 존재하지 않습니다.")
+        );
+        assertEquals("글제목입니다.", findPost.getTitle());
+        assertEquals("새로운글내용입니다.", findPost.getContent());
     }
 
     @Test
     @DisplayName("존재하지 않는 글 수정")
-    void patch2() throws Exception {
+    void patch4() throws Exception {
         //given
         Post post = Post.builder()
                 .title("글제목입니다.")
@@ -240,7 +276,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("글 삭제")
+    @DisplayName("글 삭제, DB값 변경")
     void delete1() throws Exception {
         //given
         Post post = Post.builder()
@@ -249,10 +285,11 @@ class PostControllerTest {
                 .build();
         postRepository.save(post);
 
-        //expected
+        //when
         mockMvc.perform(delete("/posts/{postId}", post.getId()))
                 .andExpect(status().isOk())
                 .andDo(print());
+        assertEquals(0L, postRepository.count());
     }
 
     @Test

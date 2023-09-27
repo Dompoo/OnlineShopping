@@ -191,7 +191,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("상품 수정")
+    @DisplayName("상품 이름 수정, DB값 변경")
     void patch1() throws Exception {
         //given
         Product product = Product.builder()
@@ -203,22 +203,60 @@ class ProductControllerTest {
         ProductEditRequest productEditRequest =
                 ProductEditRequest.builder()
                         .productName("새상품이름입니다.")
-                        .price(20000)
                         .build();
         String json = objectMapper.writeValueAsString(productEditRequest);
 
-        //expected
+        //when
         mockMvc.perform(patch("/products/{productId}", product.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
+
+        //then
+        Product findProduct = productRepository.findById(product.getId()).orElseThrow(
+                () -> new RuntimeException("존재하지 않는 상품입니다.")
+        );
+        assertEquals("새상품이름입니다.", findProduct.getProductName());
+        assertEquals(10000, findProduct.getPrice());
+    }
+
+    @Test
+    @DisplayName("상품 가격 수정, DB값 변경")
+    void patch2() throws Exception {
+        //given
+        Product product = Product.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
+                .build();
+        productRepository.save(product);
+
+        ProductEditRequest productEditRequest =
+                ProductEditRequest.builder()
+                        .price(20000)
+                        .build();
+        String json = objectMapper.writeValueAsString(productEditRequest);
+
+        //when
+        mockMvc.perform(patch("/products/{productId}", product.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        //then
+        Product findProduct = productRepository.findById(product.getId()).orElseThrow(
+                () -> new RuntimeException("존재하지 않는 상품입니다.")
+        );
+        assertEquals("상품이름입니다.", findProduct.getProductName());
+        assertEquals(20000, findProduct.getPrice());
     }
 
     @Test
     @DisplayName("존재하지 않는 상품 수정")
-    void patch2() throws Exception {
+    void patch3() throws Exception {
         //given
         Product product = Product.builder()
                 .productName("상품이름입니다.")
@@ -245,7 +283,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("상품 삭제")
+    @DisplayName("상품 삭제, DB값 변경")
     void delete1() throws Exception {
         //given
         Product product = Product.builder()
@@ -254,10 +292,13 @@ class ProductControllerTest {
                 .build();
         productRepository.save(product);
 
-        //expected
+        //when
         mockMvc.perform(delete("/products/{productId}", product.getId()))
                 .andExpect(status().isOk())
                 .andDo(print());
+
+        //then
+        assertEquals(0L, productRepository.count());
     }
 
     @Test
