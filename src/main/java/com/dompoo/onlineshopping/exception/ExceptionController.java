@@ -5,17 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionController {
 
-    @ResponseBody //Model을 view로 변환하지 않고 그대로 반환하도록 만들어줌.
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
@@ -31,7 +29,6 @@ public class ExceptionController {
         return response;
     }
 
-    @ResponseBody
     @ExceptionHandler(PostException.class)
     public ResponseEntity<ErrorResponse> postException(PostException e) {
         ErrorResponse errorBody = ErrorResponse.builder()
@@ -44,7 +41,6 @@ public class ExceptionController {
                 .body(errorBody);
     }
 
-    @ResponseBody
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<ErrorResponse> productException(ProductException e) {
         ErrorResponse errorBody = ErrorResponse.builder()
