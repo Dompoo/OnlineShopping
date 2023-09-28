@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import axios from "axios";
 import {ref} from "vue";
-import {useRouter} from "vue-router";
 
 const posts = ref([]);
-const router = useRouter();
 
 axios.get("/onlineShopping-api/posts?page=1&size=5").then((response) => {
   response.data.forEach((r : any) => {
