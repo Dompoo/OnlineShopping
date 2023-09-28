@@ -79,7 +79,7 @@ public class PostControllerDocTest {
         postRepository.save(post);
 
         //expected
-        this.mockMvc.perform(get("/posts/{postId}", 1L)
+        this.mockMvc.perform(get("/posts/{postId}", post.getId())
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -136,12 +136,13 @@ public class PostControllerDocTest {
                 .title("새로운글제목입니다.")
                 .content("새로운글내용입니다.")
                 .build();
+        String json = objectMapper.writeValueAsString(postEditRequest);
 
         //expected
         mockMvc.perform(patch("/posts/{postId}", post.getId())
                         .accept(APPLICATION_JSON)
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postEditRequest))
+                        .content(json)
                 )
                 .andExpect(status().isOk())
                 .andDo(print())
