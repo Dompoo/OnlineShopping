@@ -1,10 +1,23 @@
 = 온라인 쇼핑물 API  Docs
-:toc:
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 글 생성
+=== 요청
+include::{snippets}/post-craete/http-request.adoc[]
+include::{snippets}/post-craete/request-fields.adoc[]
+=== 응답
+include::{snippets}/post-craete/http-response.adoc[]
+
 
 == 글 단건조회
 === 요청
-include::{snippets}/index/http-request.adoc[]
+include::{snippets}/post-getOne/http-request.adoc[]
+include::{snippets}/post-getOne/path-parameters.adoc[]
 === 응답
-include::{snippets}/index/http-response.adoc[]
-=== CURL
-include::{snippets}/index/curl-request.adoc[]
+include::{snippets}/post-getOne/http-response.adoc[]
+include::{snippets}/post-getOne/response-fields.adoc[]
