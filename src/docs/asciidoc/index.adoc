@@ -50,20 +50,37 @@ include::{snippets}/post-delete/http-response.adoc[]
 
 === 상품 생성
 ==== 요청
+include::{snippets}/product-craete/http-request.adoc[]
+include::{snippets}/product-craete/request-fields.adoc[]
 ==== 응답
+include::{snippets}/product-craete/http-response.adoc[]
 
 === 상품 단건조회
 ==== 요청
+include::{snippets}/product-getOne/http-request.adoc[]
+include::{snippets}/product-getOne/path-parameters.adoc[]
 ==== 응답
+include::{snippets}/product-getOne/http-response.adoc[]
+include::{snippets}/product-getOne/response-fields.adoc[]
 
 === 상품 다건조회
 ==== 요청
+include::{snippets}/product-getList/http-request.adoc[]
 ==== 응답
+include::{snippets}/product-getList/http-response.adoc[]
+include::{snippets}/product-getList/response-fields.adoc[]
 
 === 상품 수정
 ==== 요청
+include::{snippets}/product-update/http-request.adoc[]
+include::{snippets}/product-update/path-parameters.adoc[]
+include::{snippets}/product-update/request-fields.adoc[]
 ==== 응답
+include::{snippets}/product-update/http-response.adoc[]
 
 === 상품 삭제
 ==== 요청
+include::{snippets}/product-delete/http-request.adoc[]
+include::{snippets}/product-delete/path-parameters.adoc[]
 ==== 응답
+include::{snippets}/product-delete/http-response.adoc[]
