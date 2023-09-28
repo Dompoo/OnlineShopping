@@ -3,21 +3,67 @@
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :sectlinks:
 
-== 글 생성
-=== 요청
+== 게시글
+
+=== 글 생성
+==== 요청
 include::{snippets}/post-craete/http-request.adoc[]
 include::{snippets}/post-craete/request-fields.adoc[]
-=== 응답
+==== 응답
 include::{snippets}/post-craete/http-response.adoc[]
 
-
-== 글 단건조회
-=== 요청
+=== 글 단건조회
+==== 요청
 include::{snippets}/post-getOne/http-request.adoc[]
 include::{snippets}/post-getOne/path-parameters.adoc[]
-=== 응답
+==== 응답
 include::{snippets}/post-getOne/http-response.adoc[]
 include::{snippets}/post-getOne/response-fields.adoc[]
+
+=== 글 다건조회
+==== 요청
+include::{snippets}/post-getList/http-request.adoc[]
+==== 응답
+include::{snippets}/post-getList/http-response.adoc[]
+include::{snippets}/post-getList/response-fields.adoc[]
+
+=== 글 수정
+==== 요청
+include::{snippets}/post-update/http-request.adoc[]
+include::{snippets}/post-delete/path-parameters.adoc[]
+include::{snippets}/post-update/request-fields.adoc[]
+==== 응답
+include::{snippets}/post-update/http-response.adoc[]
+
+=== 글 삭제
+==== 요청
+include::{snippets}/post-delete/http-request.adoc[]
+include::{snippets}/post-delete/path-parameters.adoc[]
+==== 응답
+include::{snippets}/post-delete/http-response.adoc[]
+
+
+== 상품
+
+=== 상품 생성
+==== 요청
+==== 응답
+
+=== 상품 단건조회
+==== 요청
+==== 응답
+
+=== 상품 다건조회
+==== 요청
+==== 응답
+
+=== 상품 수정
+==== 요청
+==== 응답
+
+=== 상품 삭제
+==== 요청
+==== 응답
