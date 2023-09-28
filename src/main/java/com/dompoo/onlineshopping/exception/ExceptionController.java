@@ -37,7 +37,8 @@ public class ExceptionController {
                 .validation(e.getValidation())
                 .build();
 
-        return ResponseEntity.status(Integer.parseInt(e.statusCode()))
+        return ResponseEntity
+                .status(Integer.parseInt(e.statusCode()))
                 .body(errorBody);
     }
 
@@ -49,7 +50,8 @@ public class ExceptionController {
                 .validation(e.getValidation())
                 .build();
 
-        return ResponseEntity.status(Integer.parseInt(e.statusCode()))
+        return ResponseEntity
+                .status(Integer.parseInt(e.statusCode()))
                 .body(errorBody);
     }
 }
