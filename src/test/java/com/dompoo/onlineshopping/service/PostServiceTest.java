@@ -105,6 +105,7 @@ class PostServiceTest {
                 postService.get(savedPost.getId() + 1)
         );
         assertEquals("존재하지 않는 글입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
     }
 
     @Test
@@ -198,8 +199,10 @@ class PostServiceTest {
                 .build();
 
         //expected
-        assertThrows(PostNotFound.class, () ->
+        PostNotFound e = assertThrows(PostNotFound.class, () ->
                 postService.edit(post.getId() + 1, postEditRequest));
+        assertEquals("존재하지 않는 글입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
     }
 
     @Test
@@ -233,5 +236,6 @@ class PostServiceTest {
         PostNotFound e = assertThrows(PostNotFound.class, () ->
                 postService.delete(post.getId() + 1));
         assertEquals("존재하지 않는 글입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
     }
 }

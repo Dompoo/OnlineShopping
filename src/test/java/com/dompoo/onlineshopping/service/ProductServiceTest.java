@@ -84,6 +84,7 @@ class ProductServiceTest {
         ProductNotFound e = assertThrows(ProductNotFound.class, () ->
                 productService.get(savedProduct.getId() + 1));
         assertEquals("존재하지 않는 상품입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
     }
 
     @Test
@@ -206,6 +207,7 @@ class ProductServiceTest {
         ProductNotFound e = assertThrows(ProductNotFound.class, () ->
                 productService.edit(product.getId() + 1, productEditRequest));
         assertEquals("존재하지 않는 상품입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
     }
 
     @Test
@@ -239,5 +241,6 @@ class ProductServiceTest {
         ProductNotFound e = assertThrows(ProductNotFound.class, () ->
                 productService.delete(product.getId() + 1));
         assertEquals("존재하지 않는 상품입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
     }
 }
