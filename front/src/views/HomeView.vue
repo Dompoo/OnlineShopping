@@ -14,25 +14,64 @@ axios.get("/onlineShopping-api/posts?page=1&size=5").then((response) => {
 <template>
   <ul>
     <li v-for="post in posts" :key="post.id">
-      <div>
+      <div class="title">
         <router-link :to="{ name: 'read', params: {postId: post.id}}">
           {{post.title}}
         </router-link>
       </div>
 
-      <div>
+      <div class="content">
         {{post.content}}
       </div>
+
+      <div class="sub d-flex">
+        <div class="category">개발</div>
+        <div class="regDate">2023-09-29</div>
+      </div>
+
     </li>
   </ul>
 </template>
 
-<style scoped>
-li {
-  margin-bottom: 1rem;
-}
+<style scoped lang="scss">
+ul {
+  list-style: none;
+  padding: 0;
 
-li:last-child {
-  margin-bottom: 0;
+  li {
+    margin-bottom: 1.9rem;
+
+    .title {
+      a {
+        font-size: 1.1rem;
+        color: #383838;
+        text-decoration: none;
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .content {
+      font-size: 0.85rem;
+      margin-top: 8px;
+      color: #7e7e7e;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .sub {
+      margin-top: 9px;
+      font-size: 0.78rem;
+
+      .regDate {
+        margin-left: 10px;
+        color: #6b6b6b;
+      }
+    }
+
+  }
 }
 </style>
