@@ -43,26 +43,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("/posts 요청시 {}를 출력한다.")
-    void post1() throws Exception {
-        //given
-        PostCreateRequest request = PostCreateRequest.builder()
-                .title("글제목입니다.")
-                .content("글내용입니다.")
-                .build();
-        String json = objectMapper.writeValueAsString(request);
-
-        //expected
-        mockMvc.perform(post("/posts")
-                        .contentType(APPLICATION_JSON)
-                        .content(json)
-                ) // Content-Type : applcation/json
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("/posts 요청시 title값은 필수다.")
+    @DisplayName("글 작성 요청시 title값은 필수다.")
     void post2() throws Exception {
         //given
         PostCreateRequest request = PostCreateRequest.builder()
@@ -83,7 +64,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("/posts DB에 값이 저장된다.")
+    @DisplayName("글 작성 요청시 DB에 값이 저장된다.")
     void post3() throws Exception {
         //given
         PostCreateRequest request = PostCreateRequest.builder()
