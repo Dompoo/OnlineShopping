@@ -20,7 +20,8 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/test")
-    public String test() {
+    public String test(@RequestAttribute("userName") String userName) {
+        log.info(">> username : {}", userName);
         return "hello";
     }
 

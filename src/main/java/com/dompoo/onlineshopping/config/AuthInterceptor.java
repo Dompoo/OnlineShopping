@@ -11,14 +11,11 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info(">> preHandle");
-
         String accessToken = request.getParameter("accessToken");
         if (accessToken != null && accessToken.equals("dompoo")) {
-            log.info(">> preHandle >> accecpted");
+            request.setAttribute("userName", accessToken);
             return true;
         }
-        log.info(">> preHandle >> rejected");
         throw new Unauthorized();
     }
 }
