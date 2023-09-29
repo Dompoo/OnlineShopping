@@ -1,5 +1,6 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.config.data.UserSession;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
 import com.dompoo.onlineshopping.request.PostSearch;
@@ -20,8 +21,8 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/test")
-    public String test(@RequestAttribute("userName") String userName) {
-        log.info(">> username : {}", userName);
+    public String test(UserSession userSession) {
+        log.info(">> username : {}", userSession.name);
         return "hello";
     }
 
