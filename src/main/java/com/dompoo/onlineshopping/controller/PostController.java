@@ -21,9 +21,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/test")
-    public String test(UserSession userSession) {
+    public Long test(UserSession userSession) {
         log.info(">> userID : {}", userSession.id);
-        return "hello";
+        return userSession.id;
     }
 
     @PostMapping("/posts")

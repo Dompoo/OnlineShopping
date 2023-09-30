@@ -38,7 +38,9 @@ public class Users {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Session addSession(Session session) {
+    public Session addSession() {
+        Session session = Session.builder()
+                .users(this).build();
         sessions.add(session);
         return session;
     }

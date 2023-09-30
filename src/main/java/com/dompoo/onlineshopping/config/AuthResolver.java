@@ -1,14 +1,20 @@
 package com.dompoo.onlineshopping.config;
 
 import com.dompoo.onlineshopping.config.data.UserSession;
+import com.dompoo.onlineshopping.domain.Session;
 import com.dompoo.onlineshopping.exception.Unauthorized;
+import com.dompoo.onlineshopping.repository.SessionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
+
+    private final SessionRepository sessionRepository;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -22,8 +28,9 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
             throw new Unauthorized();
         }
 
-        // 데이터베이스 사용자 확인 ...
+        Session session = sessionRepository.findByAccessToken(accessToken)
+                .orElseThrow(Unauthorized::new);
 
-        return new UserSession(1L); // 데이터베이스 사용자 Id값
+        return new UserSession(session.getUsers().getId());
     }
 }

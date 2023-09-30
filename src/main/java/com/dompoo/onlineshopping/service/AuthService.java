@@ -25,12 +25,7 @@ public class AuthService {
         Users findUser = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword())
                 .orElseThrow(InvalidSigninInfo::new);
 
-        Session newSession = Session.builder()
-                .users(findUser)
-                .build();
-
-        Session session = findUser.addSession(newSession);
-        sessionRepository.save(newSession);
+        Session session = findUser.addSession();
 
         return session.getAccessToken();
     }
