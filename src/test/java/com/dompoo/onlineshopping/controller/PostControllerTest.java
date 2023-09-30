@@ -1,7 +1,7 @@
 package com.dompoo.onlineshopping.controller;
 
 import com.dompoo.onlineshopping.domain.Post;
-import com.dompoo.onlineshopping.repository.PostRepository;
+import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;

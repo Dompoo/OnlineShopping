@@ -2,7 +2,7 @@ package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.exception.ProductNotFound;
-import com.dompoo.onlineshopping.repository.ProductRepository;
+import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
 import com.dompoo.onlineshopping.request.ProductSearch;

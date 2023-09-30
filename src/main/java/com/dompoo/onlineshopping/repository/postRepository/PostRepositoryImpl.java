@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.repository;
+package com.dompoo.onlineshopping.repository.postRepository;
 
 import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.domain.QPost;

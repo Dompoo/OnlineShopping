@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.repository;
+package com.dompoo.onlineshopping.repository.productRepository;
 
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.domain.QProduct;
