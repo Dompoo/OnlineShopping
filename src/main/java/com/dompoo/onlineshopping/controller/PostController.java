@@ -1,6 +1,5 @@
 package com.dompoo.onlineshopping.controller;
 
-import com.dompoo.onlineshopping.config.data.UserSession;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
 import com.dompoo.onlineshopping.request.PostSearch;
@@ -19,12 +18,6 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
-
-    @GetMapping("/test")
-    public Long test(UserSession userSession) {
-        log.info(">> userID : {}", userSession.id);
-        return userSession.id;
-    }
 
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreateRequest request) {
