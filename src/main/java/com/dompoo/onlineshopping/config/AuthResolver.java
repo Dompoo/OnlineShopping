@@ -1,11 +1,12 @@
 package com.dompoo.onlineshopping.config;
 
 import com.dompoo.onlineshopping.config.data.UserSession;
-import com.dompoo.onlineshopping.domain.Session;
 import com.dompoo.onlineshopping.exception.Unauthorized;
 import com.dompoo.onlineshopping.repository.SessionRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -14,10 +15,13 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Base64;
+
 @Slf4j
 @RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
+    private static final String KEY = "qIfnVcAmfv/0dsuiEivRMNuHaFzslJUamg0siNVjCAA=";
     private final SessionRepository sessionRepository;
 
     @Override
@@ -27,23 +31,25 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        if (servletRequest == null) {
-            log.error("servletRequest is NULL!");
-            throw new Unauthorized();
-        }
-        Cookie[] cookies = servletRequest.getCookies();
-
-        if (cookies == null || cookies.length == 0) {
-            log.error("NO COOKIES!");
+        String jws = webRequest.getHeader("Authorization");
+        if (jws == null || jws.isEmpty()) {
+            log.error("jws is NULL!");
             throw new Unauthorized();
         }
 
-        String accessToken = cookies[0].getValue();
+        byte[] decodeKey = Base64.getDecoder().decode(KEY);
 
-        Session session = sessionRepository.findByAccessToken(accessToken)
-                .orElseThrow(Unauthorized::new);
+        try {
+            //복호화과정
+            Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(decodeKey)
+                    .build()
+                    .parseClaimsJws(jws);
+            String userId = claims.getBody().getSubject();
+            return new UserSession(Long.parseLong(userId));
+        } catch (JwtException e) {
+            throw new Unauthorized();
+        }
 
-        return new UserSession(session.getUsers().getId());
     }
 }

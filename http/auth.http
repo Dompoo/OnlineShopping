@@ -1,4 +1,10 @@
-### 쿠키 발급 요청
+### 인증 페이지 요청
+
+GET http://localhost:8080/test
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.31w6C8BPdC3rqqy1W67_Pp5vhu2bibMTx25o_1QZdZU
+
+### JWT 발급 요청
 
 POST http://localhost:8080/auth/login
 Content-Type: application/json
@@ -7,9 +13,3 @@ Content-Type: application/json
   "email": "dompoo@gmail.com",
   "password": "1234"
 }
-
-### 인증 페이지 요청
-
-GET http://localhost:8080/test
-Content-Type: application/json
-Cookie: SESSION=0cc4fdf0-63c9-4ca0-baf3-0a5de668e7ae

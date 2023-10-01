@@ -20,13 +20,13 @@ public class AuthService {
     private final SessionRepository sessionRepository;
 
     @Transactional
-    public String signin(LoginRequest request) {
+    public Long signin(LoginRequest request) {
         // DB에서 조회
         Users findUser = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword())
                 .orElseThrow(InvalidSigninInfo::new);
 
         Session session = findUser.addSession();
 
-        return session.getAccessToken();
+        return findUser.getId();
     }
 }
