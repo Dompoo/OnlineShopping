@@ -1,5 +1,6 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.config.AppConfig;
 import com.dompoo.onlineshopping.config.data.UserSession;
 import com.dompoo.onlineshopping.request.LoginRequest;
 import com.dompoo.onlineshopping.response.SessionResponse;
@@ -14,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
+import java.util.Date;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
 
-    private static final String KEY = "qIfnVcAmfv/0dsuiEivRMNuHaFzslJUamg0siNVjCAA=";
     private final AuthService authService;
+    private final AppConfig appConfig;
 
     @GetMapping("/test")
     public Long test(UserSession userSession) {
@@ -34,11 +35,12 @@ public class AuthController {
     public SessionResponse login(@RequestBody LoginRequest request) {
         Long userId = authService.signin(request);
 
-        SecretKey key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(KEY));
+        SecretKey key = Keys.hmacShaKeyFor(appConfig.getJwtKey());
 
         String jws = Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .signWith(key)
+                .setIssuedAt(new Date())
                 .compact();
 
         return SessionResponse.builder()

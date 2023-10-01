@@ -2,7 +2,7 @@
 
 GET http://localhost:8080/test
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.31w6C8BPdC3rqqy1W67_Pp5vhu2bibMTx25o_1QZdZU
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjk2MTQyMDYxfQ.yJ3OA2DdQLBlajrqvZy0Sdpxx5EgTpuNCAxCk89r05g
 
 ### JWT 발급 요청
 

@@ -2,7 +2,6 @@ package com.dompoo.onlineshopping.config;
 
 import com.dompoo.onlineshopping.config.data.UserSession;
 import com.dompoo.onlineshopping.exception.Unauthorized;
-import com.dompoo.onlineshopping.repository.SessionRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -15,14 +14,11 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Base64;
-
 @Slf4j
 @RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
-    private static final String KEY = "qIfnVcAmfv/0dsuiEivRMNuHaFzslJUamg0siNVjCAA=";
-    private final SessionRepository sessionRepository;
+    private final AppConfig appConfig;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -37,12 +33,10 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
             throw new Unauthorized();
         }
 
-        byte[] decodeKey = Base64.getDecoder().decode(KEY);
-
         try {
             //복호화과정
             Jws<Claims> claims = Jwts.parserBuilder()
-                    .setSigningKey(decodeKey)
+                    .setSigningKey(appConfig.getJwtKey())
                     .build()
                     .parseClaimsJws(jws);
             String userId = claims.getBody().getSubject();
