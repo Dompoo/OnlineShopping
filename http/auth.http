@@ -1,4 +1,4 @@
-### 테스트 요청
+### 쿠키 발급 요청
 
 POST http://localhost:8080/auth/login
 Content-Type: application/json
@@ -12,4 +12,4 @@ Content-Type: application/json
 
 GET http://localhost:8080/test
 Content-Type: application/json
-Cookie: SESSION=65627340-55b4-4ed9-ab3f-40b6860397a7
+Cookie: SESSION=0cc4fdf0-63c9-4ca0-baf3-0a5de668e7ae
