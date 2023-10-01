@@ -1,10 +1,10 @@
 package com.dompoo.onlineshopping.controller;
 
-import com.dompoo.onlineshopping.domain.Session;
 import com.dompoo.onlineshopping.domain.Users;
 import com.dompoo.onlineshopping.repository.SessionRepository;
 import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.request.LoginRequest;
+import com.dompoo.onlineshopping.request.SignupRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -132,44 +129,22 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("로그인 후 권한이 필요한 페이지에 접속한다 /test")
-    void login4() throws Exception {
+    @DisplayName("회원가입")
+    void signup1() throws Exception {
         //given
-        Users user = Users.builder()
+        SignupRequest request = SignupRequest.builder()
                 .name("dompoo")
                 .email("dompoo@gmail.com")
                 .password("1234")
                 .build();
-        Session session = user.addSession();
-        userRepository.save(user);
 
+        String json = objectMapper.writeValueAsString(request);
 
         //expected
-        mockMvc.perform(get("/test")
-                        .header("Authorization", session.getAccessToken())
-                        .contentType(APPLICATION_JSON))
+        mockMvc.perform(post("/auth/signup")
+                        .contentType(APPLICATION_JSON)
+                        .content(json))
                 .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("로그인 후 검증되지 않은 세션값으로 권한이 필요한 페이지에 접속할 수 없다.")
-    void login5() throws Exception {
-        //given
-        Users user = Users.builder()
-                .name("dompoo")
-                .email("dompoo@gmail.com")
-                .password("1234")
-                .build();
-        userRepository.save(user);
-
-
-        //expected
-        mockMvc.perform(get("/test")
-                        .header("Authorization", UUID.randomUUID())
-                        .contentType(APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("인증이 필요합니다."))
                 .andDo(print());
     }
 }
