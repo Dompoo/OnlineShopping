@@ -7,3 +7,9 @@ Content-Type: application/json
   "email": "dompoo@gmail.com",
   "password": "1234"
 }
+
+### 인증 페이지 요청
+
+GET http://localhost:8080/test
+Content-Type: application/json
+Cookie: SESSION=65627340-55b4-4ed9-ab3f-40b6860397a7
