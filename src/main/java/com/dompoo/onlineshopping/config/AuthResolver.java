@@ -1,7 +1,7 @@
 package com.dompoo.onlineshopping.config;
 
 import com.dompoo.onlineshopping.config.data.UserSession;
-import com.dompoo.onlineshopping.exception.Unauthorized;
+import com.dompoo.onlineshopping.exception.userException.Unauthorized;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;

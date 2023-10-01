@@ -1,9 +1,9 @@
-package com.dompoo.onlineshopping.exception;
+package com.dompoo.onlineshopping.exception.userException;
 
 /**
  * status : 401
  */
-public class Unauthorized extends PostException {
+public class Unauthorized extends UserException {
 
     private static final String MESSAGE = "인증이 필요합니다.";
     private static final String STATUS_CODE = "401";
@@ -14,7 +14,7 @@ public class Unauthorized extends PostException {
 
     public Unauthorized(String fieldName, String message) {
         super(MESSAGE);
-        addValidatioin(fieldName, message);
+        addValidation(fieldName, message);
     }
 
     @Override

@@ -1,6 +1,6 @@
-package com.dompoo.onlineshopping.exception;
+package com.dompoo.onlineshopping.exception.userException;
 
-public class InvalidSigninInfo extends PostException {
+public class InvalidSigninInfo extends UserException {
 
     private static final String MESSAGE = "아이디/비밀번호가 올바르지 않습니다.";
     private static final String STATUS_CODE = "400";
@@ -11,7 +11,7 @@ public class InvalidSigninInfo extends PostException {
 
     public InvalidSigninInfo(String fieldName, String message) {
         super(MESSAGE);
-        addValidatioin(fieldName, message);
+        addValidation(fieldName,message);
     }
 
     @Override

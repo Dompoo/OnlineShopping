@@ -1,5 +1,7 @@
 package com.dompoo.onlineshopping.exception;
 
+import com.dompoo.onlineshopping.exception.postException.PostException;
+import com.dompoo.onlineshopping.exception.productException.ProductException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

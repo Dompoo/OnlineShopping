@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.exception;
+package com.dompoo.onlineshopping.exception.productException;
 
 import lombok.Getter;
 

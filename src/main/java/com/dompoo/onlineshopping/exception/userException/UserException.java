@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.exception;
+package com.dompoo.onlineshopping.exception.userException;
 
 import lombok.Getter;
 
@@ -6,19 +6,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public abstract class PostException extends RuntimeException {
+public abstract class UserException extends RuntimeException {
 
     private final Map<String, String> validation = new HashMap<>();
 
-    public PostException(String message) {
+    public UserException(String message) {
         super(message);
     }
 
-    public PostException(String message, Throwable cause) {
+    public UserException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public void addValidatioin(String fieldName, String message) {
+    public void addValidation(String fieldName, String message) {
         validation.put(fieldName, message);
     }
 

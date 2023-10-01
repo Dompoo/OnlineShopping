@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.exception;
+package com.dompoo.onlineshopping.exception.productException;
 
 public class ProductNotFound  extends ProductException {
 

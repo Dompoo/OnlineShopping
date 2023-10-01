@@ -1,7 +1,7 @@
 package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Post;
-import com.dompoo.onlineshopping.exception.PostNotFound;
+import com.dompoo.onlineshopping.exception.postException.PostNotFound;
 import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;

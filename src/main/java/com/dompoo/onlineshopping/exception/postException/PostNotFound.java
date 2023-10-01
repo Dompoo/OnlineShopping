@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.exception;
+package com.dompoo.onlineshopping.exception.postException;
 
 public class PostNotFound extends PostException {
 
@@ -11,7 +11,7 @@ public class PostNotFound extends PostException {
 
     public PostNotFound(String fieldName, String message) {
         super(MESSAGE);
-        addValidatioin(fieldName, message);
+        addValidation(fieldName, message);
     }
 
     @Override
