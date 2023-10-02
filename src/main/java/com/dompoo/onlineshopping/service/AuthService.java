@@ -1,16 +1,14 @@
 package com.dompoo.onlineshopping.service;
 
-import com.dompoo.onlineshopping.domain.Session;
+import com.dompoo.onlineshopping.crypto.PasswordEncoder;
 import com.dompoo.onlineshopping.domain.Users;
 import com.dompoo.onlineshopping.exception.userException.AlreadyExistsEmailException;
 import com.dompoo.onlineshopping.exception.userException.InvalidSigninInfo;
-import com.dompoo.onlineshopping.repository.SessionRepository;
 import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.request.LoginRequest;
 import com.dompoo.onlineshopping.request.SignupRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,15 +20,19 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final SessionRepository sessionRepository;
+
+    private final PasswordEncoder encoder;
 
     @Transactional
     public Long signin(LoginRequest request) {
-        // DB에서 조회
-        Users findUser = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword())
+        Users findUser = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(InvalidSigninInfo::new);
 
-        Session session = findUser.addSession();
+        if (!encoder.matches(request.getPassword(), findUser.getPassword())) {
+            throw new InvalidSigninInfo();
+        }
+
+        findUser.addSession();
 
         return findUser.getId();
     }
@@ -41,8 +43,7 @@ public class AuthService {
             throw new AlreadyExistsEmailException();
         }
 
-        SCryptPasswordEncoder encoder = new SCryptPasswordEncoder(16, 8, 1, 32, 64);
-        String encryptedPassword = encoder.encode(request.getPassword());
+        String encryptedPassword = encoder.encrypt(request.getPassword());
 
         Users users = Users.builder()
                 .name(request.getName())

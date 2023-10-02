@@ -1,5 +1,6 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.crypto.PasswordEncoder;
 import com.dompoo.onlineshopping.domain.Users;
 import com.dompoo.onlineshopping.repository.SessionRepository;
 import com.dompoo.onlineshopping.repository.UserRepository;
@@ -38,6 +39,9 @@ class AuthControllerTest {
     @Autowired
     private SessionRepository sessionRepository;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
 
     @BeforeEach
     void clean() {
@@ -52,7 +56,7 @@ class AuthControllerTest {
         userRepository.save(Users.builder()
                 .name("dompoo")
                 .email("dompoo@gmail.com")
-                .password("1234")
+                .password(encoder.encrypt("1234"))
                 .build());
 
         LoginRequest request = LoginRequest.builder()
@@ -78,7 +82,7 @@ class AuthControllerTest {
         Users user = userRepository.save(Users.builder()
                 .name("dompoo")
                 .email("dompoo@gmail.com")
-                .password("1234")
+                .password(encoder.encrypt("1234"))
                 .build());
 
         LoginRequest request = LoginRequest.builder()
@@ -109,7 +113,7 @@ class AuthControllerTest {
         Users user = userRepository.save(Users.builder()
                 .name("dompoo")
                 .email("dompoo@gmail.com")
-                .password("1234")
+                .password(encoder.encrypt("1234"))
                 .build());
 
         LoginRequest request = LoginRequest.builder()
