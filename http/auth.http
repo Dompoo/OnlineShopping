@@ -3,4 +3,8 @@
 POST http://localhost:8080/auth/login
 Content-Type: application/x-www-form-urlencoded
 
-username=dompoo&password=1234
+username=dompoo&password=1234&remember=1
+
+### 메인페이지
+
+GET http://localhost:8080

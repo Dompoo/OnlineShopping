@@ -2,7 +2,6 @@ package com.dompoo.onlineshopping.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -38,8 +37,12 @@ public class SecurityConfig {
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/"))
-                .userDetailsService(customUserDetailsService())
-                .httpBasic(Customizer.withDefaults());
+                .rememberMe(rm -> rm
+                        .rememberMeParameter("remember")
+                        .alwaysRemember(false)
+                        .tokenValiditySeconds(2592000))
+                .userDetailsService(customUserDetailsService());
+//                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
