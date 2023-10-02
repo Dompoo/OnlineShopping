@@ -10,6 +10,7 @@ import com.dompoo.onlineshopping.request.LoginRequest;
 import com.dompoo.onlineshopping.request.SignupRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,9 +41,12 @@ public class AuthService {
             throw new AlreadyExistsEmailException();
         }
 
+        SCryptPasswordEncoder encoder = new SCryptPasswordEncoder(16, 8, 1, 32, 64);
+        String encryptedPassword = encoder.encode(request.getPassword());
+
         Users users = Users.builder()
                 .name(request.getName())
-                .password(request.getPassword())
+                .password(encryptedPassword)
                 .email(request.getEmail())
                 .build();
         userRepository.save(users);
