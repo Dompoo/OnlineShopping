@@ -1,13 +1,13 @@
 package com.dompoo.onlineshopping.repository;
 
-import com.dompoo.onlineshopping.domain.Users;
+import com.dompoo.onlineshopping.domain.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<Users, Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
-    Optional<Users> findByEmailAndPassword(String email, String password);
+    Optional<User> findByEmailAndPassword(String email, String password);
 
-    Optional<Users> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

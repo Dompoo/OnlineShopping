@@ -1,6 +1,5 @@
 package com.dompoo.onlineshopping.controller;
 
-import com.dompoo.onlineshopping.repository.SessionRepository;
 import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.request.SignupRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,13 +29,9 @@ class AuthControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private SessionRepository sessionRepository;
-
     @BeforeEach
     void clean() {
         userRepository.deleteAll();
-        sessionRepository.deleteAll();
     }
 
     @Test

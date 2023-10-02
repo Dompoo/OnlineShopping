@@ -10,14 +10,14 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QUsers is a Querydsl query type for Users
+ * QUser is a Querydsl query type for User
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QUsers extends EntityPathBase<Users> {
+public class QUser extends EntityPathBase<User> {
 
-    private static final long serialVersionUID = 1818527230L;
+    private static final long serialVersionUID = 58662165L;
 
-    public static final QUsers users = new QUsers("users");
+    public static final QUser user = new QUser("user");
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
@@ -29,16 +29,16 @@ public class QUsers extends EntityPathBase<Users> {
 
     public final StringPath password = createString("password");
 
-    public QUsers(String variable) {
-        super(Users.class, forVariable(variable));
+    public QUser(String variable) {
+        super(User.class, forVariable(variable));
     }
 
-    public QUsers(Path<? extends Users> path) {
+    public QUser(Path<? extends User> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QUsers(PathMetadata metadata) {
-        super(Users.class, metadata);
+    public QUser(PathMetadata metadata) {
+        super(User.class, metadata);
     }
 
 }

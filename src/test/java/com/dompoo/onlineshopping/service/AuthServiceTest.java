@@ -1,6 +1,6 @@
 package com.dompoo.onlineshopping.service;
 
-import com.dompoo.onlineshopping.domain.Users;
+import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.exception.userException.AlreadyExistsEmailException;
 import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.request.SignupRequest;
@@ -41,7 +41,7 @@ class AuthServiceTest {
 
         //then
         assertEquals(1L, userRepository.count());
-        Users findUser = userRepository.findAll().iterator().next();
+        User findUser = userRepository.findAll().iterator().next();
         assertEquals("dompoo", findUser.getName());
 //        assertTrue(encoder.matches("1234", findUser.getPassword()));
         assertNotNull(findUser.getPassword());
@@ -52,7 +52,7 @@ class AuthServiceTest {
     @DisplayName("회원가입시 중복된 이메일은 실패한다.")
     void signup2() {
         //given
-        userRepository.save(Users.builder()
+        userRepository.save(User.builder()
                 .name("oopmod")
                 .password("4321")
                 .email("dompoo@gmail.com")
