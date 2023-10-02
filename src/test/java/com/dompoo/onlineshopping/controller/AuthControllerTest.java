@@ -1,6 +1,6 @@
 package com.dompoo.onlineshopping.controller;
 
-import com.dompoo.onlineshopping.crypto.PasswordEncoder;
+import com.dompoo.onlineshopping.crypto.SCryptPasswordEncoder;
 import com.dompoo.onlineshopping.domain.Users;
 import com.dompoo.onlineshopping.repository.SessionRepository;
 import com.dompoo.onlineshopping.repository.UserRepository;
@@ -40,7 +40,7 @@ class AuthControllerTest {
     private SessionRepository sessionRepository;
 
     @Autowired
-    private PasswordEncoder encoder;
+    private SCryptPasswordEncoder encoder;
 
 
     @BeforeEach

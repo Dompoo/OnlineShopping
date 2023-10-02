@@ -1,6 +1,6 @@
 package com.dompoo.onlineshopping.service;
 
-import com.dompoo.onlineshopping.crypto.PasswordEncoder;
+import com.dompoo.onlineshopping.crypto.SCryptPasswordEncoder;
 import com.dompoo.onlineshopping.domain.Users;
 import com.dompoo.onlineshopping.exception.userException.AlreadyExistsEmailException;
 import com.dompoo.onlineshopping.exception.userException.InvalidSigninInfo;
@@ -21,7 +21,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
 
-    private final PasswordEncoder encoder;
+    private final SCryptPasswordEncoder encoder;
 
     @Transactional
     public Long signin(LoginRequest request) {

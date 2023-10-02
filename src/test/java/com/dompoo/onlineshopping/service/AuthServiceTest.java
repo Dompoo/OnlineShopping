@@ -1,6 +1,6 @@
 package com.dompoo.onlineshopping.service;
 
-import com.dompoo.onlineshopping.crypto.PasswordEncoder;
+import com.dompoo.onlineshopping.crypto.SCryptPasswordEncoder;
 import com.dompoo.onlineshopping.domain.Users;
 import com.dompoo.onlineshopping.exception.userException.AlreadyExistsEmailException;
 import com.dompoo.onlineshopping.exception.userException.InvalidSigninInfo;
@@ -26,7 +26,7 @@ class AuthServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder encoder;
+    private SCryptPasswordEncoder encoder;
 
 
     @BeforeEach
