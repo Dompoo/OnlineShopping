@@ -26,9 +26,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize ->
                     authorize
-                            .requestMatchers(
-                                    new AntPathRequestMatcher("/auth/login"))
-                            .permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/auth/login")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                             .anyRequest().authenticated()
                 )
                 .csrf((csrf) -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")).disable())
