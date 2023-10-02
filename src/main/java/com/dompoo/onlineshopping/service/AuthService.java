@@ -6,6 +6,7 @@ import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.request.SignupRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,6 +18,8 @@ public class AuthService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     public void signup(SignupRequest request) {
         Optional<User> findUsers = userRepository.findByEmail(request.getEmail());
         if (findUsers.isPresent()) {
@@ -25,7 +28,7 @@ public class AuthService {
 
         User user = User.builder()
                 .name(request.getName())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .build();
         userRepository.save(user);
