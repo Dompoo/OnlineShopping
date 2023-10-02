@@ -1,15 +1,6 @@
-### 인증 페이지 요청
-
-GET http://localhost:8080/test
-Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjk2MTQyMDYxfQ.yJ3OA2DdQLBlajrqvZy0Sdpxx5EgTpuNCAxCk89r05g
-
-### JWT 발급 요청
+### JWT 발급 요청 (로그인)
 
 POST http://localhost:8080/auth/login
-Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded
 
-{
-  "email": "dompoo@gmail.com",
-  "password": "1234"
-}
+username=dompoo&password=1234

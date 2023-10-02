@@ -1,8 +1,7 @@
 spring:
   h2:
     console:
-      enabled: true
-      path: /h2-console
+#      enabled: true
 
   data:
     web:
