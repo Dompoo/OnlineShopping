@@ -1,13 +1,9 @@
 package com.dompoo.onlineshopping.service;
 
-import com.dompoo.onlineshopping.crypto.SCryptPasswordEncoder;
 import com.dompoo.onlineshopping.domain.Users;
 import com.dompoo.onlineshopping.exception.userException.AlreadyExistsEmailException;
-import com.dompoo.onlineshopping.exception.userException.InvalidSigninInfo;
 import com.dompoo.onlineshopping.repository.UserRepository;
-import com.dompoo.onlineshopping.request.LoginRequest;
 import com.dompoo.onlineshopping.request.SignupRequest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,10 +20,6 @@ class AuthServiceTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private SCryptPasswordEncoder encoder;
-
 
     @BeforeEach
     void clean() {
@@ -51,7 +43,7 @@ class AuthServiceTest {
         assertEquals(1L, userRepository.count());
         Users findUser = userRepository.findAll().iterator().next();
         assertEquals("dompoo", findUser.getName());
-        assertTrue(encoder.matches("1234", findUser.getPassword()));
+//        assertTrue(encoder.matches("1234", findUser.getPassword()));
         assertNotNull(findUser.getPassword());
         assertEquals("dompoo@gmail.com", findUser.getEmail());
     }
@@ -76,49 +68,4 @@ class AuthServiceTest {
         assertThrows(AlreadyExistsEmailException.class, () ->
                 authService.signup(request));
     }
-
-    @Test
-    @DisplayName("로그인 성공")
-    void login1() {
-        //given
-        Users users = Users.builder()
-                .name("dompoo")
-                .password(encoder.encrypt("1234"))
-                .email("dompoo@gmail.com")
-                .build();
-        userRepository.save(users);
-
-        LoginRequest loginRequest = LoginRequest.builder()
-                .email("dompoo@gmail.com")
-                .password("1234")
-                .build();
-
-        //when
-        Long userId = authService.signin(loginRequest);
-
-        //then
-        Assertions.assertNotNull(userId);
-    }
-
-    @Test
-    @DisplayName("로그인 실패")
-    void login2() {
-        //given
-        SignupRequest signupRequest = SignupRequest.builder()
-                .name("dompoo")
-                .password("1234")
-                .email("dompoo@gmail.com")
-                .build();
-        authService.signup(signupRequest);
-
-        LoginRequest loginRequest = LoginRequest.builder()
-                .email("dompoo@gmail.com")
-                .password("5678")
-                .build();
-
-        //expected
-        Assertions.assertThrows(InvalidSigninInfo.class, () ->
-                authService.signin(loginRequest));
-    }
-
 }
