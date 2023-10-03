@@ -10,7 +10,8 @@ public class UserPrincipal extends User {
     private final Long userId;
 
     public UserPrincipal(com.dompoo.onlineshopping.domain.User user) {
-        super(user.getEmail(), user.getPassword(), List.of(new SimpleGrantedAuthority("ADMIN")));
+        super(user.getEmail(), user.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         this.userId = user.getId();
     }
 

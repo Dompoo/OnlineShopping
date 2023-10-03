@@ -26,9 +26,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(new AntPathRequestMatcher("/auth/login")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/auth/signup")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/user")).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/admin")).hasRole("ADMIN")
                         .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .csrf((csrf) -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")).disable())
                 .headers((headers) -> headers.addHeaderWriter(new XFrameOptionsHeaderWriter(SAMEORIGIN)))
                 .formLogin((formLogin) -> formLogin
