@@ -1,7 +1,12 @@
 package com.dompoo.onlineshopping.config;
 
+import com.dompoo.onlineshopping.config.handler.Http401Handler;
+import com.dompoo.onlineshopping.config.handler.Http403Handler;
+import com.dompoo.onlineshopping.config.handler.LoginFailHandler;
 import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +23,10 @@ import static org.springframework.security.web.header.writers.frameoptions.XFram
 
 @Configuration
 @EnableWebSecurity(debug = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,7 +45,11 @@ public class SecurityConfig {
                         .loginProcessingUrl("/auth/login")
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/"))
+                        .defaultSuccessUrl("/")
+                        .failureHandler(new LoginFailHandler(objectMapper)))
+                .exceptionHandling((e) -> e
+                        .accessDeniedHandler(new Http403Handler(objectMapper))
+                        .authenticationEntryPoint(new Http401Handler(objectMapper)))
                 .rememberMe(rm -> rm
                         .rememberMeParameter("remember")
                         .alwaysRemember(false)
