@@ -8,7 +8,7 @@ Content-Type: application/json
   "password": "1234"
 }
 
-### JWT 발급 요청 (로그인)
+### 로그인
 POST http://localhost:8080/auth/login
 Content-Type: application/json
 
@@ -16,13 +16,3 @@ Content-Type: application/json
   "email": "dompoo@gmail.com",
   "password": "1234"
 }
-
-
-### 메인페이지
-GET http://localhost:8080
-
-### 사용자페이지
-GET http://localhost:8080/user
-
-### 관리자페이지
-GET http://localhost:8080/admin

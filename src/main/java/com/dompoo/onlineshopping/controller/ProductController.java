@@ -8,6 +8,7 @@ import com.dompoo.onlineshopping.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/products")
     public void addProduct(@RequestBody @Valid ProductCreateRequest request) {
         productService.add(request);
@@ -34,11 +36,13 @@ public class ProductController {
         return productService.getList(productSearch);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/products/{productId}")
     public void patch(@PathVariable Long productId, @RequestBody @Valid ProductEditRequest productEditRequest) {
         productService.edit(productId, productEditRequest);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/products/{productId}")
     public void delete(@PathVariable Long productId) {
         productService.delete(productId);
