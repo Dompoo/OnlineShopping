@@ -149,6 +149,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("글 제목 수정, DB값 변경")
     void patch1() throws Exception {
         //given
@@ -178,6 +179,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("글 내용 수정, DB값 변경")
     void patch2() throws Exception {
         //given
@@ -207,6 +209,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("존재하지 않는 글 수정")
     void patch4() throws Exception {
         //given
@@ -231,6 +234,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("글 삭제, DB값 변경")
     void delete1() throws Exception {
         //given
@@ -248,6 +252,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("존재하지 않는 글 삭제")
     void delete2() throws Exception {
         //given

@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class PostControllerDocTest {
     private PostRepository postRepository;
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("글 등록")
     void test1() throws Exception {
         PostCreateRequest request = PostCreateRequest.builder()
@@ -123,6 +125,7 @@ public class PostControllerDocTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("글 수정")
     void tets4() throws Exception{
         //given
@@ -158,6 +161,7 @@ public class PostControllerDocTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("글 삭제")
     void test5() throws Exception{
         //given

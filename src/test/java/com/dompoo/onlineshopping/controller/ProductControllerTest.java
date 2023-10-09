@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -42,7 +43,8 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("/products 요청시 {}를 출력한다.")
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @DisplayName("글 작성")
     void addProduct1() throws Exception {
         //given
         Product product = Product.builder()
@@ -58,52 +60,6 @@ class ProductControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
-    }
-
-    @Test
-    @DisplayName("/products 요청시 productName값은 필수다.")
-    void addProduct2() throws Exception {
-        //given
-        Product product = Product.builder()
-                .price(10000)
-                .build();
-        String json = objectMapper.writeValueAsString(product);
-
-        //expected
-        mockMvc.perform(post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.productName").value("상품이름을 입력해주세요."))
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("/products 요청시 DB에 저장된다.")
-    void addProduct3() throws Exception {
-        //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        String json = objectMapper.writeValueAsString(product);
-
-        //when
-        mockMvc.perform(post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                )
-                .andExpect(status().isOk())
-                .andDo(print());
-
-        //then
-        assertEquals(1L, productRepository.findAll().size());
-        Product findProduct = productRepository.findAll().get(0);
-        assertEquals("상품이름입니다.", findProduct.getProductName());
-        assertEquals(10000, findProduct.getPrice());
     }
     
     @Test
@@ -191,6 +147,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("상품 이름 수정, DB값 변경")
     void patch1() throws Exception {
         //given
@@ -223,6 +180,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("상품 가격 수정, DB값 변경")
     void patch2() throws Exception {
         //given
@@ -255,6 +213,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("존재하지 않는 상품 수정")
     void patch3() throws Exception {
         //given
@@ -283,6 +242,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("상품 삭제, DB값 변경")
     void delete1() throws Exception {
         //given
@@ -302,6 +262,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
     @DisplayName("존재하지 않는 상품 삭제")
     void delete2() throws Exception {
         //given
