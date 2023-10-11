@@ -20,10 +20,21 @@ public class Post {
     @Lob
     private String content;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
-    public Post(String title, String content) {
+    public Post(String title, String content, User user) {
         this.title = title;
         this.content = content;
+        setUser(user);
+    }
+
+    //연관관계 편의 메서드
+    public void setUser(User user) {
+        this.user = user;
+        user.getPosts().add(this);
     }
 
     public PostEditor.PostEditorBuilder toEditor() {

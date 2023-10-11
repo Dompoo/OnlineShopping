@@ -1,9 +1,6 @@
 package com.dompoo.onlineshopping.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,10 +18,21 @@ public class Product {
     private String productName;
     private int price;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
-    public Product(String productName, int price) {
+    public Product(String productName, int price, User user) {
         this.productName = productName;
         this.price = price;
+        setUser(user);
+    }
+
+    //연관관계 편의 메서드
+    public void setUser(User user) {
+        this.user = user;
+        user.getProducts().add(this);
     }
 
     public ProductEditor.ProductEditorBuilder toEditor() {
