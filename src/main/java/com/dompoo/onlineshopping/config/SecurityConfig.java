@@ -88,7 +88,7 @@ public class SecurityConfig {
     public UserDetailsService UserDetailsService(UserRepository userRepository) {
         return username -> {
             User user = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException(username + "을 찾을 수 업습니다."));
+                    .orElseThrow(() -> new UsernameNotFoundException(username + "을 찾을 수 없습니다."));
             return new UserPrincipal(user);
         };
     }
