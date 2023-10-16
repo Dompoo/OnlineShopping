@@ -2,7 +2,10 @@ package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.domain.PostEditor;
+import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.exception.postException.PostNotFound;
+import com.dompoo.onlineshopping.exception.userException.UserNotFound;
+import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
@@ -22,11 +25,15 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public void write(PostCreateRequest postCreateRequest) {
+    public void write(PostCreateRequest postCreateRequest, Long userId) {
+        User loginUser = userRepository.findById(userId).orElseThrow(UserNotFound::new);
+
         Post post = Post.builder()
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
+                .user(loginUser)
                 .build();
 
         postRepository.save(post);

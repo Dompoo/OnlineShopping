@@ -1,5 +1,6 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.config.UserPrincipal;
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
 import com.dompoo.onlineshopping.request.ProductSearch;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +24,8 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/products")
-    public void addProduct(@RequestBody @Valid ProductCreateRequest request) {
-        productService.add(request);
+    public void addProduct(@RequestBody @Valid ProductCreateRequest request, @AuthenticationPrincipal UserPrincipal principal) {
+        productService.add(request, principal.getUserId());
     }
 
     @GetMapping("/products/{productId}")

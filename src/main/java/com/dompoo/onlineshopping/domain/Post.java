@@ -32,7 +32,7 @@ public class Post {
     }
 
     //연관관계 편의 메서드
-    public void setUser(User user) {
+    private void setUser(User user) {
         this.user = user;
         user.getPosts().add(this);
     }

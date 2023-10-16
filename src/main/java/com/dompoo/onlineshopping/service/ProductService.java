@@ -2,7 +2,10 @@ package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.domain.ProductEditor;
+import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.exception.productException.ProductNotFound;
+import com.dompoo.onlineshopping.exception.userException.UserNotFound;
+import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
@@ -20,11 +23,15 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
-    public void add(ProductCreateRequest request) {
+    public void add(ProductCreateRequest request, Long userId) {
+        User loginUser = userRepository.findById(userId).orElseThrow(UserNotFound::new);
+
         Product product = Product.builder()
                 .productName(request.getProductName())
                 .price(request.getPrice())
+                .user(loginUser)
                 .build();
 
         productRepository.save(product);
