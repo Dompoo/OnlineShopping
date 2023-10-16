@@ -1,7 +1,9 @@
 package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Product;
+import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.exception.productException.ProductNotFound;
+import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -22,42 +25,53 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductServiceTest {
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void clean() {
         productRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("상품 추가")
+    @Transactional
     void add() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         ProductCreateRequest request = ProductCreateRequest.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
                 .build();
 
         //when
-        productService.add(request);
+        productService.add(request, addUser.getId());
 
         //then
         assertEquals(1L, productRepository.count());
         Product findProduct = productRepository.findAll().get(0);
         assertEquals("상품이름입니다.", findProduct.getProductName());
         assertEquals(10000, findProduct.getPrice());
+        assertEquals(addUser.getName(), findProduct.getUser().getName());
     }
 
     @Test
     @DisplayName("상품 1개 조회")
     void get() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Product product = Product.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
+                .user(addUser)
                 .build();
         Product savedProduct = productRepository.save(product);
 
@@ -74,9 +88,12 @@ class ProductServiceTest {
     @DisplayName("상품 1개 조회 실패")
     void get2() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Product product = Product.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
+                .user(addUser)
                 .build();
         Product savedProduct = productRepository.save(product);
 
@@ -91,10 +108,13 @@ class ProductServiceTest {
     @DisplayName("상품 여러개 조회")
     void getList() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         List<Product> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Product.builder()
                         .productName("상품 " + i)
                         .price(i * 1000)
+                        .user(addUser)
                         .build()
                 )
                 .toList();
@@ -118,9 +138,12 @@ class ProductServiceTest {
     @DisplayName("상품 전체 수정")
     void edit1() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Product product = Product.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
+                .user(addUser)
                 .build();
         productRepository.save(product);
 
@@ -143,9 +166,12 @@ class ProductServiceTest {
     @DisplayName("상품 제목 수정")
     void edit2() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Product product = Product.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
+                .user(addUser)
                 .build();
         productRepository.save(product);
 
@@ -167,9 +193,12 @@ class ProductServiceTest {
     @DisplayName("상품 가격 수정")
     void edit3() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Product product = Product.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
+                .user(addUser)
                 .build();
         productRepository.save(product);
 
@@ -191,9 +220,12 @@ class ProductServiceTest {
     @DisplayName("상품 수정 실패")
     void edit4() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Product product = Product.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
+                .user(addUser)
                 .build();
         productRepository.save(product);
 
@@ -214,9 +246,12 @@ class ProductServiceTest {
     @DisplayName("상품 삭제")
     void delete() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Product product = Product.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
+                .user(addUser)
                 .build();
         productRepository.save(product);
 
@@ -231,9 +266,12 @@ class ProductServiceTest {
     @DisplayName("상품 삭제 실패")
     void delete2() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Product product = Product.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
+                .user(addUser)
                 .build();
         productRepository.save(product);
 

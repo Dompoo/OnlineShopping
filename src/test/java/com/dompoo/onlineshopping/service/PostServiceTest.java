@@ -1,7 +1,9 @@
 package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.domain.Post;
+import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.exception.postException.PostNotFound;
+import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -19,6 +22,7 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class PostServiceTest {
 
     @Autowired
@@ -27,22 +31,28 @@ class PostServiceTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void clean() {
         postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @DisplayName("글 작성")
     void write() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         PostCreateRequest request = PostCreateRequest.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
                 .build();
 
         //when
-        postService.write(request);
+        postService.write(request, addUser.getId());
 
         //then
         assertEquals(1L, postRepository.count());
@@ -50,15 +60,19 @@ class PostServiceTest {
         Post post = postRepository.findAll().get(0);
         assertEquals("글제목입니다.", post.getTitle());
         assertEquals("글내용입니다.", post.getContent());
+        assertEquals(addUser.getName(), post.getUser().getName());
     }
 
     @Test
     @DisplayName("글 1개 조회")
     void get() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Post post = Post.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
+                .user(addUser)
                 .build();
         Post savedPost = postRepository.save(post);
 
@@ -75,9 +89,12 @@ class PostServiceTest {
     @DisplayName("글 1개 조회시 글제목은 최대 10글자이다.")
     void get2() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Post post = Post.builder()
                 .title("12345678901234567890")
                 .content("글내용입니다.")
+                .user(addUser)
                 .build();
         Post savedPost = postRepository.save(post);
 
@@ -94,9 +111,12 @@ class PostServiceTest {
     @DisplayName("글 1개 조회 실패")
     void get3() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Post post = Post.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
+                .user(addUser)
                 .build();
         Post savedPost = postRepository.save(post);
 
@@ -112,11 +132,14 @@ class PostServiceTest {
     @DisplayName("글 여러개 조회")
     void getList() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         List<Post> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Post.builder()
-                            .title("제목 " + i)
-                            .content("내용 " + i)
-                            .build()
+                        .title("제목 " + i)
+                        .content("내용 " + i)
+                        .user(addUser)
+                        .build()
                 )
                 .toList();
         postRepository.saveAll(requestPosts);
@@ -139,9 +162,12 @@ class PostServiceTest {
     @DisplayName("글 제목 수정")
     void edit() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Post post = Post.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
+                .user(addUser)
                 .build();
         postRepository.save(post);
 
@@ -163,9 +189,12 @@ class PostServiceTest {
     @DisplayName("글 내용 수정")
     void edit2() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Post post = Post.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
+                .user(addUser)
                 .build();
         postRepository.save(post);
 
@@ -187,9 +216,12 @@ class PostServiceTest {
     @DisplayName("글 수정 실패")
     void edit3() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Post post = Post.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
+                .user(addUser)
                 .build();
         postRepository.save(post);
 
@@ -209,9 +241,12 @@ class PostServiceTest {
     @DisplayName("글 삭제")
     void delete() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Post post = Post.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
+                .user(addUser)
                 .build();
         postRepository.save(post);
 
@@ -226,9 +261,12 @@ class PostServiceTest {
     @DisplayName("글 삭제 실패")
     void delete2() {
         //given
+        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+
         Post post = Post.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
+                .user(addUser)
                 .build();
         postRepository.save(post);
 
