@@ -2,10 +2,12 @@ package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.TestUtil;
 import com.dompoo.onlineshopping.domain.Post;
+import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.exception.postException.PostNotFound;
 import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
+import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
 import com.dompoo.onlineshopping.request.PostSearch;
@@ -30,6 +32,9 @@ class PostServiceTest {
     private PostService postService;
 
     @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private PostRepository postRepository;
 
     @Autowired
@@ -51,9 +56,14 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         PostCreateRequest request = PostCreateRequest.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
+                .productId(addProduct.getId())
                 .build();
 
         //when
@@ -65,6 +75,7 @@ class PostServiceTest {
         Post post = postRepository.findAll().get(0);
         assertEquals("글제목입니다.", post.getTitle());
         assertEquals("글내용입니다.", post.getContent());
+        assertEquals(addProduct.getProductName(), post.getProduct().getProductName());
         assertEquals(addUser.getName(), post.getUser().getName());
     }
 
@@ -75,8 +86,13 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
+                .product(addProduct)
                 .build());
 
         //when
@@ -95,9 +111,14 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .title("123456789012341234")
                 .user(addUser)
+                .product(addProduct)
                 .build());
 
         //when
@@ -116,8 +137,13 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
+                .product(addProduct)
                 .build());
 
         //expected
@@ -135,11 +161,16 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         List<Post> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Post.builder()
                         .title("제목 " + i)
                         .content("내용 " + i)
                         .user(addUser)
+                        .product(addProduct)
                         .build()
                 )
                 .toList();
@@ -166,8 +197,13 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
+                .product(addProduct)
                 .build());
 
         PostEditRequest postEditRequest = PostEditRequest.builder()
@@ -191,8 +227,13 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
+                .product(addProduct)
                 .build());
 
         PostEditRequest postEditRequest = PostEditRequest.builder()
@@ -216,8 +257,13 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
+                .product(addProduct)
                 .build());
 
         PostEditRequest postEditRequest = PostEditRequest.builder()
@@ -239,8 +285,13 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
+                .product(addProduct)
                 .build());
 
         //when
@@ -257,8 +308,13 @@ class PostServiceTest {
         User addUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
+        Product addProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
+                .product(addProduct)
                 .build());
 
         //expected
