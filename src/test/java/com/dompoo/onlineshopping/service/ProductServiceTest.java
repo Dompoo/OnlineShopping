@@ -1,5 +1,6 @@
 package com.dompoo.onlineshopping.service;
 
+import com.dompoo.onlineshopping.TestUtil;
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.exception.productException.ProductNotFound;
@@ -33,6 +34,9 @@ class ProductServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TestUtil testUtil;
+
     @BeforeEach
     void clean() {
         productRepository.deleteAll();
@@ -44,7 +48,7 @@ class ProductServiceTest {
     @Transactional
     void add() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder().build());
 
         ProductCreateRequest request = ProductCreateRequest.builder()
                 .productName("상품이름입니다.")
@@ -66,13 +70,12 @@ class ProductServiceTest {
     @DisplayName("상품 1개 조회")
     void get() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder().build());
 
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
+        Product product = testUtil.newProductBuilder()
                 .user(addUser)
                 .build();
+
         Product savedProduct = productRepository.save(product);
 
         //when
@@ -88,14 +91,12 @@ class ProductServiceTest {
     @DisplayName("상품 1개 조회 실패")
     void get2() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
                 .user(addUser)
-                .build();
-        Product savedProduct = productRepository.save(product);
+                .build());
 
         //expected
         ProductNotFound e = assertThrows(ProductNotFound.class, () ->
@@ -108,7 +109,8 @@ class ProductServiceTest {
     @DisplayName("상품 여러개 조회")
     void getList() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
         List<Product> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Product.builder()
@@ -138,14 +140,12 @@ class ProductServiceTest {
     @DisplayName("상품 전체 수정")
     void edit1() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
                 .user(addUser)
-                .build();
-        productRepository.save(product);
+                .build());
 
         ProductEditRequest productEditRequest =
                 ProductEditRequest.builder()
@@ -154,10 +154,10 @@ class ProductServiceTest {
                         .build();
 
         //when
-        productService.edit(product.getId(), productEditRequest);
+        productService.edit(savedProduct.getId(), productEditRequest);
 
         //then
-        Product findProduct = productRepository.findById(product.getId()).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
+        Product findProduct = productRepository.findById(savedProduct.getId()).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
         assertEquals("새상품이름입니다.", findProduct.getProductName());
         assertEquals(20000, findProduct.getPrice());
     }
@@ -166,14 +166,12 @@ class ProductServiceTest {
     @DisplayName("상품 제목 수정")
     void edit2() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
                 .user(addUser)
-                .build();
-        productRepository.save(product);
+                .build());
 
         ProductEditRequest productEditRequest =
                 ProductEditRequest.builder()
@@ -181,10 +179,10 @@ class ProductServiceTest {
                         .build();
 
         //when
-        productService.edit(product.getId(), productEditRequest);
+        productService.edit(savedProduct.getId(), productEditRequest);
 
         //then
-        Product findProduct = productRepository.findById(product.getId()).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
+        Product findProduct = productRepository.findById(savedProduct.getId()).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
         assertEquals("새상품이름입니다.", findProduct.getProductName());
         assertEquals(10000, findProduct.getPrice());
     }
@@ -193,14 +191,12 @@ class ProductServiceTest {
     @DisplayName("상품 가격 수정")
     void edit3() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
                 .user(addUser)
-                .build();
-        productRepository.save(product);
+                .build());
 
         ProductEditRequest productEditRequest =
                 ProductEditRequest.builder()
@@ -208,10 +204,10 @@ class ProductServiceTest {
                         .build();
 
         //when
-        productService.edit(product.getId(), productEditRequest);
+        productService.edit(savedProduct.getId(), productEditRequest);
 
         //then
-        Product findProduct = productRepository.findById(product.getId()).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
+        Product findProduct = productRepository.findById(savedProduct.getId()).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
         assertEquals("상품이름입니다.", findProduct.getProductName());
         assertEquals(20000, findProduct.getPrice());
     }
@@ -220,14 +216,12 @@ class ProductServiceTest {
     @DisplayName("상품 수정 실패")
     void edit4() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
                 .user(addUser)
-                .build();
-        productRepository.save(product);
+                .build());
 
         ProductEditRequest productEditRequest =
                 ProductEditRequest.builder()
@@ -237,7 +231,7 @@ class ProductServiceTest {
 
         //expected
         ProductNotFound e = assertThrows(ProductNotFound.class, () ->
-                productService.edit(product.getId() + 1, productEditRequest));
+                productService.edit(savedProduct.getId() + 1, productEditRequest));
         assertEquals("존재하지 않는 상품입니다.", e.getMessage());
         assertEquals("404", e.statusCode());
     }
@@ -246,17 +240,15 @@ class ProductServiceTest {
     @DisplayName("상품 삭제")
     void delete() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
                 .user(addUser)
-                .build();
-        productRepository.save(product);
+                .build());
 
         //when
-        productService.delete(product.getId());
+        productService.delete(savedProduct.getId());
 
         //then
         assertEquals(0, productRepository.count());
@@ -266,18 +258,16 @@ class ProductServiceTest {
     @DisplayName("상품 삭제 실패")
     void delete2() {
         //given
-        User addUser = userRepository.save(new User("dompoo", "dompoo@Gmail.com", "1234"));
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
                 .user(addUser)
-                .build();
-        productRepository.save(product);
+                .build());
 
         //expected
         ProductNotFound e = assertThrows(ProductNotFound.class, () ->
-                productService.delete(product.getId() + 1));
+                productService.delete(savedProduct.getId() + 1));
         assertEquals("존재하지 않는 상품입니다.", e.getMessage());
         assertEquals("404", e.statusCode());
     }

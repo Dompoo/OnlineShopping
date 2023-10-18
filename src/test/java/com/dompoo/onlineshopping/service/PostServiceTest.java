@@ -48,9 +48,13 @@ class PostServiceTest {
     @DisplayName("글 작성")
     void write() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        PostCreateRequest request = testUtil.newPostCreateRequest();
+        PostCreateRequest request = PostCreateRequest.builder()
+                .title("글제목입니다.")
+                .content("글내용입니다.")
+                .build();
 
         //when
         postService.write(request, addUser.getId());
@@ -68,12 +72,12 @@ class PostServiceTest {
     @DisplayName("글 1개 조회")
     void get() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Post post = testUtil.newPostBuilder()
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
-                .build();
-        Post savedPost = postRepository.save(post);
+                .build());
 
         //when
         PostResponse findPost = postService.get(savedPost.getId());
@@ -88,13 +92,13 @@ class PostServiceTest {
     @DisplayName("글 1개 조회시 글제목은 최대 10글자이다.")
     void get2() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Post post = testUtil.newPostBuilder()
-                .title("1234567890123123123")
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .title("123456789012341234")
                 .user(addUser)
-                .build();
-        Post savedPost = postRepository.save(post);
+                .build());
 
         //when
         PostResponse findPost = postService.get(savedPost.getId());
@@ -109,12 +113,12 @@ class PostServiceTest {
     @DisplayName("글 1개 조회 실패")
     void get3() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Post post = testUtil.newPostBuilder()
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
-                .build();
-        Post savedPost = postRepository.save(post);
+                .build());
 
         //expected
         PostNotFound e = assertThrows(PostNotFound.class, () ->
@@ -128,7 +132,8 @@ class PostServiceTest {
     @DisplayName("글 여러개 조회")
     void getList() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
         List<Post> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Post.builder()
@@ -158,23 +163,23 @@ class PostServiceTest {
     @DisplayName("글 제목 수정")
     void edit() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Post post = testUtil.newPostBuilder()
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
-                .build();
-        postRepository.save(post);
+                .build());
 
         PostEditRequest postEditRequest = PostEditRequest.builder()
                 .title("새로운글제목입니다.")
                 .build();
 
         //when
-        postService.edit(post.getId(), postEditRequest);
+        postService.edit(savedPost.getId(), postEditRequest);
 
         //then
-        Post changedPost = postRepository.findById(post.getId())
-                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
+        Post changedPost = postRepository.findById(savedPost.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + savedPost.getId()));
         assertEquals("새로운글제목입니다.", changedPost.getTitle());
         assertEquals("글내용입니다.", changedPost.getContent());
     }
@@ -183,23 +188,23 @@ class PostServiceTest {
     @DisplayName("글 내용 수정")
     void edit2() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Post post = testUtil.newPostBuilder()
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
-                .build();
-        postRepository.save(post);
+                .build());
 
         PostEditRequest postEditRequest = PostEditRequest.builder()
                 .content("새로운글내용입니다.")
                 .build();
 
         //when
-        postService.edit(post.getId(), postEditRequest);
+        postService.edit(savedPost.getId(), postEditRequest);
 
         //then
-        Post changedPost = postRepository.findById(post.getId())
-                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + post.getId()));
+        Post changedPost = postRepository.findById(savedPost.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + savedPost.getId()));
         assertEquals("글제목입니다.", changedPost.getTitle());
         assertEquals("새로운글내용입니다.", changedPost.getContent());
     }
@@ -208,12 +213,12 @@ class PostServiceTest {
     @DisplayName("글 수정 실패")
     void edit3() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Post post = testUtil.newPostBuilder()
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
-                .build();
-        postRepository.save(post);
+                .build());
 
         PostEditRequest postEditRequest = PostEditRequest.builder()
                 .title("새로운글제목입니다.")
@@ -222,7 +227,7 @@ class PostServiceTest {
 
         //expected
         PostNotFound e = assertThrows(PostNotFound.class, () ->
-                postService.edit(post.getId() + 1, postEditRequest));
+                postService.edit(savedPost.getId() + 1, postEditRequest));
         assertEquals("존재하지 않는 글입니다.", e.getMessage());
         assertEquals("404", e.statusCode());
     }
@@ -231,15 +236,15 @@ class PostServiceTest {
     @DisplayName("글 삭제")
     void delete() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Post post = testUtil.newPostBuilder()
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
-                .build();
-        postRepository.save(post);
+                .build());
 
         //when
-        postService.delete(post.getId());
+        postService.delete(savedPost.getId());
 
         //then
         assertEquals(0, postRepository.count());
@@ -249,16 +254,16 @@ class PostServiceTest {
     @DisplayName("글 삭제 실패")
     void delete2() {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilder().build());
+        User addUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
 
-        Post post = testUtil.newPostBuilder()
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
                 .user(addUser)
-                .build();
-        postRepository.save(post);
+                .build());
 
         //expected
         PostNotFound e = assertThrows(PostNotFound.class, () ->
-                postService.delete(post.getId() + 1));
+                postService.delete(savedPost.getId() + 1));
         assertEquals("존재하지 않는 글입니다.", e.getMessage());
         assertEquals("404", e.statusCode());
     }

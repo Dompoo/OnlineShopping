@@ -6,8 +6,6 @@ import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
 import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
-import com.dompoo.onlineshopping.request.PostCreateRequest;
-import com.dompoo.onlineshopping.request.PostEditRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,21 +38,7 @@ public class TestUtil {
 
     public Product.ProductBuilder newProductBuilder() {
         return Product.builder()
-                .productName("상품이름")
+                .productName("상품이름입니다.")
                 .price(10000);
-    }
-
-    public PostCreateRequest newPostCreateRequest() {
-        return PostCreateRequest.builder()
-                .title("글제목입니다.")
-                .content("글내용입니다.")
-                .build();
-    }
-
-    public PostEditRequest newPostEditRequest() {
-        return PostEditRequest.builder()
-                .title("새로운글제목입니다.")
-                .content("새로운글내용입니다.")
-                .build();
     }
 }
