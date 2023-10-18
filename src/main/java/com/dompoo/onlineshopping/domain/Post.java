@@ -24,17 +24,27 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     @Builder
-    public Post(String title, String content, User user) {
+    public Post(String title, String content, User user, Product product) {
         this.title = title;
         this.content = content;
         setUser(user);
+        setProduct(product);
     }
 
     //연관관계 편의 메서드
     private void setUser(User user) {
         this.user = user;
         user.getPosts().add(this);
+    }
+
+    private void setProduct(Product product) {
+        this.product = product;
+        product.getPosts().add(this);
     }
 
     public PostEditor.PostEditorBuilder toEditor() {
