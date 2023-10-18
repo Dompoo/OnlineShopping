@@ -3,10 +3,6 @@ package com.dompoo.onlineshopping;
 import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.domain.User;
-import com.dompoo.onlineshopping.repository.UserRepository;
-import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
-import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,31 +10,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class TestUtil {
 
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    private static Long count = 0L;
 
     public User.UserBuilder newUserBuilder() {
         return User.builder()
-                .name("dompoo")
-                .email("dompoo@gmail.com")
-                .password("1234");
+                .name("dompoo" + count++)
+                .email("dompoo@gmail.com" + count++)
+                .password("1234" + count++);
     }
 
     public Post.PostBuilder newPostBuilder() {
         return Post.builder()
-                .title("글제목입니다.")
-                .content("글내용입니다.");
+                .title("글제목입니다." + count++)
+                .content("글내용입니다." + count++);
     }
 
     public Product.ProductBuilder newProductBuilder() {
         return Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000);
+                .productName("상품이름입니다." + count++)
+                .price((int) (10000 + count++));
     }
 }

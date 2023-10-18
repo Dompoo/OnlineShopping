@@ -45,6 +45,7 @@ class PostServiceTest {
 
     @BeforeEach
     void clean() {
+        productRepository.deleteAll();
         postRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -100,8 +101,8 @@ class PostServiceTest {
 
         //then
         assertNotNull(findPost);
-        assertEquals("글제목입니다.", findPost.getTitle());
-        assertEquals("글내용입니다.", findPost.getContent());
+        assertEquals(savedPost.getTitle(), findPost.getTitle());
+        assertEquals(savedPost.getContent(), findPost.getContent());
     }
 
     @Test
@@ -116,7 +117,7 @@ class PostServiceTest {
                 .build());
 
         Post savedPost = postRepository.save(testUtil.newPostBuilder()
-                .title("123456789012341234")
+                .title("1234567890까지만 저장되어야 한다.")
                 .user(addUser)
                 .product(addProduct)
                 .build());
@@ -127,7 +128,7 @@ class PostServiceTest {
         //then
         assertNotNull(findPost);
         assertEquals("1234567890", findPost.getTitle());
-        assertEquals("글내용입니다.", findPost.getContent());
+        assertEquals(savedPost.getContent(), findPost.getContent());
     }
 
     @Test
@@ -217,7 +218,7 @@ class PostServiceTest {
         Post changedPost = postRepository.findById(savedPost.getId())
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + savedPost.getId()));
         assertEquals("새로운글제목입니다.", changedPost.getTitle());
-        assertEquals("글내용입니다.", changedPost.getContent());
+        assertEquals(savedPost.getContent(), changedPost.getContent());
     }
 
     @Test
@@ -246,7 +247,7 @@ class PostServiceTest {
         //then
         Post changedPost = postRepository.findById(savedPost.getId())
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + savedPost.getId()));
-        assertEquals("글제목입니다.", changedPost.getTitle());
+        assertEquals(savedPost.getTitle(), changedPost.getTitle());
         assertEquals("새로운글내용입니다.", changedPost.getContent());
     }
 

@@ -72,19 +72,17 @@ class ProductServiceTest {
         //given
         User addUser = userRepository.save(testUtil.newUserBuilder().build());
 
-        Product product = testUtil.newProductBuilder()
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
                 .user(addUser)
-                .build();
-
-        Product savedProduct = productRepository.save(product);
+                .build());
 
         //when
         ProductResponse findProduct = productService.get(savedProduct.getId());
 
         //then
         assertNotNull(findProduct);
-        assertEquals("상품이름입니다.", findProduct.getProductName());
-        assertEquals(10000, findProduct.getPrice());
+        assertEquals(savedProduct.getProductName(), findProduct.getProductName());
+        assertEquals(savedProduct.getPrice(), findProduct.getPrice());
     }
 
     @Test
@@ -184,7 +182,7 @@ class ProductServiceTest {
         //then
         Product findProduct = productRepository.findById(savedProduct.getId()).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
         assertEquals("새상품이름입니다.", findProduct.getProductName());
-        assertEquals(10000, findProduct.getPrice());
+        assertEquals(savedProduct.getPrice(), findProduct.getPrice());
     }
 
     @Test
@@ -208,7 +206,7 @@ class ProductServiceTest {
 
         //then
         Product findProduct = productRepository.findById(savedProduct.getId()).orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
-        assertEquals("상품이름입니다.", findProduct.getProductName());
+        assertEquals(savedProduct.getProductName(), findProduct.getProductName());
         assertEquals(20000, findProduct.getPrice());
     }
 
