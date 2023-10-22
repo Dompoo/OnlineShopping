@@ -24,7 +24,7 @@ public class PostController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreateRequest request, @AuthenticationPrincipal UserPrincipal principal) {
+    public void post(@AuthenticationPrincipal UserPrincipal principal, @RequestBody @Valid PostCreateRequest request) {
         postService.write(request, principal.getUserId());
     }
 
@@ -44,7 +44,8 @@ public class PostController {
         postService.edit(postId, postEditRequest);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
     @DeleteMapping("/posts/{postId}")
     public void delete(@PathVariable Long postId) {
         postService.delete(postId);
