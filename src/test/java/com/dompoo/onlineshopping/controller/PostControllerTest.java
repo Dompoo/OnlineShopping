@@ -1,5 +1,6 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.config.MyMockUser;
 import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -44,7 +44,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("글 작성")
     void post1() throws Exception {
         //given
@@ -149,7 +149,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("글 제목 수정, DB값 변경")
     void patch1() throws Exception {
         //given
@@ -179,7 +179,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("글 내용 수정, DB값 변경")
     void patch2() throws Exception {
         //given
@@ -209,7 +209,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("존재하지 않는 글 수정")
     void patch4() throws Exception {
         //given
@@ -234,7 +234,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("글 삭제, DB값 변경")
     void delete1() throws Exception {
         //given
@@ -252,7 +252,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("존재하지 않는 글 삭제")
     void delete2() throws Exception {
         //given

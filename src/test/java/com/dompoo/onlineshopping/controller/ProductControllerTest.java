@@ -1,5 +1,6 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.config.MyMockUser;
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -43,7 +43,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("글 작성")
     void addProduct1() throws Exception {
         //given
@@ -147,7 +147,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("상품 이름 수정, DB값 변경")
     void patch1() throws Exception {
         //given
@@ -180,7 +180,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("상품 가격 수정, DB값 변경")
     void patch2() throws Exception {
         //given
@@ -213,7 +213,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("존재하지 않는 상품 수정")
     void patch3() throws Exception {
         //given
@@ -242,7 +242,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("상품 삭제, DB값 변경")
     void delete1() throws Exception {
         //given
@@ -262,7 +262,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("존재하지 않는 상품 삭제")
     void delete2() throws Exception {
         //given

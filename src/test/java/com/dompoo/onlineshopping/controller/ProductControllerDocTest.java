@@ -1,10 +1,12 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.config.MyMockUser;
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -43,8 +44,13 @@ public class ProductControllerDocTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @BeforeEach
+    void clean() {
+        productRepository.deleteAll();
+    }
+
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("상품 등록")
     void test1() throws Exception {
         ProductCreateRequest request = ProductCreateRequest.builder()
@@ -125,7 +131,7 @@ public class ProductControllerDocTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("상품 수정")
     void tets4() throws Exception{
         //given
@@ -161,7 +167,7 @@ public class ProductControllerDocTest {
     }
 
     @Test
-    @WithMockUser(username = "dompoo@gmail.com", password = "1234", roles = {"ADMIN"})
+    @MyMockUser
     @DisplayName("상품 삭제")
     void test5() throws Exception{
         //given
