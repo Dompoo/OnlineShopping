@@ -19,6 +19,13 @@ public class TestUtil {
                 .password("1234" + count++);
     }
 
+    public User.UserBuilder newUserBuilderPlain() {
+        return User.builder()
+                .name("dompoo")
+                .email("dompoo@gmail.com")
+                .password("1234");
+    }
+
     public Post.PostBuilder newPostBuilder() {
         return Post.builder()
                 .title("글제목입니다." + count++)

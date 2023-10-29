@@ -1,12 +1,17 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.TestUtil;
 import com.dompoo.onlineshopping.config.MyMockUser;
 import com.dompoo.onlineshopping.domain.Post;
+import com.dompoo.onlineshopping.domain.Product;
+import com.dompoo.onlineshopping.domain.User;
+import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
+import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +34,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class PostControllerTest {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ProductRepository productRepository;
+    @Autowired private PostRepository postRepository;
+    @Autowired private UserRepository userRepository;
+    @Autowired private TestUtil testUtil;
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @BeforeEach
+    @AfterEach
     void clean() {
+        productRepository.deleteAll();
         postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -48,10 +53,18 @@ class PostControllerTest {
     @DisplayName("글 작성")
     void post1() throws Exception {
         //given
+        User findUser = userRepository.findAll().get(0);
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(findUser)
+                .build());
+
         PostCreateRequest request = PostCreateRequest.builder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
+                .productId(savedProduct.getId())
                 .build();
+
         String json = objectMapper.writeValueAsString(request);
 
         //expected
@@ -67,18 +80,24 @@ class PostControllerTest {
     @DisplayName("글 1개 조회")
     void get1() throws Exception {
         //given
-        Post post = Post.builder()
-                .title("글제목입니다.")
-                .content("글내용입니다.")
-                .build();
-        postRepository.save(post);
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post post = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
 
         //expected
         mockMvc.perform(get("/posts/{postId}", post.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
-                .andExpect(jsonPath("$.title").value("글제목입니다."))
-                .andExpect(jsonPath("$.content").value("글내용입니다."))
+                .andExpect(jsonPath("$.title").value(post.getTitle()))
+                .andExpect(jsonPath("$.content").value(post.getContent()))
                 .andDo(print());
     }
 
@@ -86,11 +105,17 @@ class PostControllerTest {
     @DisplayName("존재하지 않는 글 1개 조회")
     void get2() throws Exception {
         //given
-        Post post = Post.builder()
-                .title("글제목입니다.")
-                .content("글내용입니다.")
-                .build();
-        postRepository.save(post);
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post post = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
 
         //expected
         mockMvc.perform(get("/posts/{postId}", post.getId() + 1))
@@ -104,10 +129,19 @@ class PostControllerTest {
     @DisplayName("글 여러개 조회")
     void getList1() throws Exception {
         //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         List<Post> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Post.builder()
                         .title("제목 " + i)
                         .content("내용 " + i)
+                        .user(addUser)
+                        .product(savedProduct)
                         .build()
                 )
                 .toList();
@@ -128,10 +162,19 @@ class PostControllerTest {
     @DisplayName("글 여러개 조회시 페이지를 0으로 요청해도 첫 페이지를 가져온다.")
     void getList2() throws Exception {
         //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
         List<Post> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Post.builder()
                         .title("제목 " + i)
                         .content("내용 " + i)
+                        .user(addUser)
+                        .product(savedProduct)
                         .build()
                 )
                 .toList();
@@ -153,11 +196,19 @@ class PostControllerTest {
     @DisplayName("글 제목 수정, DB값 변경")
     void patch1() throws Exception {
         //given
-        Post post = Post.builder()
+        User findUser = userRepository.findAll().get(0);
+
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(findUser)
+                .build());
+
+        Post post = postRepository.save(testUtil.newPostBuilder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
-                .build();
-        postRepository.save(post);
+                .user(findUser)
+                .product(savedProduct)
+                .build());
 
         PostEditRequest postEditRequest = PostEditRequest.builder()
                 .title("새로운글제목입니다.")
@@ -183,11 +234,18 @@ class PostControllerTest {
     @DisplayName("글 내용 수정, DB값 변경")
     void patch2() throws Exception {
         //given
-        Post post = Post.builder()
+        User findUser = userRepository.findAll().get(0);
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(findUser)
+                .build());
+
+        Post post = postRepository.save(testUtil.newPostBuilder()
                 .title("글제목입니다.")
                 .content("글내용입니다.")
-                .build();
-        postRepository.save(post);
+                .user(findUser)
+                .product(savedProduct)
+                .build());
 
         PostEditRequest postEditRequest = PostEditRequest.builder()
                 .content("새로운글내용입니다.")
@@ -213,11 +271,16 @@ class PostControllerTest {
     @DisplayName("존재하지 않는 글 수정")
     void patch4() throws Exception {
         //given
-        Post post = Post.builder()
-                .title("글제목입니다.")
-                .content("글내용입니다.")
-                .build();
-        postRepository.save(post);
+        User findUser = userRepository.findAll().get(0);
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(findUser)
+                .build());
+
+        Post post = postRepository.save(testUtil.newPostBuilder()
+                .user(findUser)
+                .product(savedProduct)
+                .build());
 
         PostEditRequest postEditRequest = PostEditRequest.builder()
                 .title("새로운글제목입니다.")
@@ -238,11 +301,16 @@ class PostControllerTest {
     @DisplayName("글 삭제, DB값 변경")
     void delete1() throws Exception {
         //given
-        Post post = Post.builder()
-                .title("글제목입니다.")
-                .content("글내용입니다.")
-                .build();
-        postRepository.save(post);
+        User findUser = userRepository.findAll().get(0);
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(findUser)
+                .build());
+
+        Post post = postRepository.save(testUtil.newPostBuilder()
+                .user(findUser)
+                .product(savedProduct)
+                .build());
 
         //when
         mockMvc.perform(delete("/posts/{postId}", post.getId()))
@@ -256,11 +324,17 @@ class PostControllerTest {
     @DisplayName("존재하지 않는 글 삭제")
     void delete2() throws Exception {
         //given
-        Post post = Post.builder()
-                .title("글제목입니다.")
-                .content("글내용입니다.")
-                .build();
-        postRepository.save(post);
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post post = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
 
         //expected
         mockMvc.perform(delete("/posts/{postId}", post.getId() + 1))
