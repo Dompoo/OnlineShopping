@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductService {
 
@@ -55,7 +56,6 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public void edit(Long productId, ProductEditRequest productEdit) {
         Product findProduct = productRepository.findById(productId)
                 .orElseThrow(ProductNotFound::new);

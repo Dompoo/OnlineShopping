@@ -1,11 +1,17 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.TestUtil;
 import com.dompoo.onlineshopping.config.MyMockUser;
 import com.dompoo.onlineshopping.domain.Product;
+import com.dompoo.onlineshopping.domain.User;
+import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
+import com.dompoo.onlineshopping.request.ProductCreateRequest;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -26,31 +33,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@Slf4j
 class ProductControllerTest {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ProductRepository productRepository;
+    @Autowired private UserRepository userRepository;
+    @Autowired private TestUtil testUtil;
+    @Autowired private EntityManager em;
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @BeforeEach
+    @AfterEach
     void clean() {
+        em.clear();
         productRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("글 작성")
     void addProduct1() throws Exception {
         //given
-        Product product = Product.builder()
+        ProductCreateRequest product = ProductCreateRequest.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
                 .build();
+
         String json = objectMapper.writeValueAsString(product);
 
         //expected
@@ -66,17 +76,18 @@ class ProductControllerTest {
     @DisplayName("상품 1개 조회")
     void get1() throws Exception {
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
+        Product product = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
+                .build());
 
         //expected
         mockMvc.perform(get("/products/{productId}", product.getId()))
                 .andExpect(jsonPath("$.id").value(product.getId()))
-                .andExpect(jsonPath("$.productName").value("상품이름입니다."))
-                .andExpect(jsonPath("$.price").value(10000))
+                .andExpect(jsonPath("$.productName").value(product.getProductName()))
+                .andExpect(jsonPath("$.price").value(product.getPrice()))
                 .andDo(print());
     }
 
@@ -84,11 +95,12 @@ class ProductControllerTest {
     @DisplayName("존재하지 않는 상품 1개 조회")
     void get2() throws Exception {
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
+        Product product = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
+                .build());
 
         //expected
         mockMvc.perform(get("/products/{productId}", product.getId() + 1))
@@ -102,10 +114,14 @@ class ProductControllerTest {
     @DisplayName("상품 여러개 조회")
     void getList1() throws Exception {
         //given
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
         List<Product> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Product.builder()
                         .productName("상품 " + i)
                         .price(i * 1000)
+                        .user(savedUser)
                         .build()
                 )
                 .toList();
@@ -126,10 +142,14 @@ class ProductControllerTest {
     @DisplayName("상품 여러개 조회시 페이지를 0으로 조회해도 첫 페이지를 가져온다.")
     void getList2() throws Exception {
         //given
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
         List<Product> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Product.builder()
                         .productName("상품 " + i)
                         .price(i * 1000)
+                        .user(savedUser)
                         .build()
                 )
                 .toList();
@@ -148,14 +168,16 @@ class ProductControllerTest {
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("상품 이름 수정, DB값 변경")
     void patch1() throws Exception {
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
+        Product product = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
+                .build());
 
         ProductEditRequest productEditRequest =
                 ProductEditRequest.builder()
@@ -176,19 +198,21 @@ class ProductControllerTest {
                 () -> new RuntimeException("존재하지 않는 상품입니다.")
         );
         assertEquals("새상품이름입니다.", findProduct.getProductName());
-        assertEquals(10000, findProduct.getPrice());
+        assertEquals(product.getPrice(), findProduct.getPrice());
     }
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("상품 가격 수정, DB값 변경")
     void patch2() throws Exception {
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
+        Product product = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
+                .build());
 
         ProductEditRequest productEditRequest =
                 ProductEditRequest.builder()
@@ -208,20 +232,22 @@ class ProductControllerTest {
         Product findProduct = productRepository.findById(product.getId()).orElseThrow(
                 () -> new RuntimeException("존재하지 않는 상품입니다.")
         );
-        assertEquals("상품이름입니다.", findProduct.getProductName());
+        assertEquals(product.getProductName(), findProduct.getProductName());
         assertEquals(20000, findProduct.getPrice());
     }
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("존재하지 않는 상품 수정")
     void patch3() throws Exception {
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
+        Product product = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
+                .build());
 
         ProductEditRequest productEditRequest =
                 ProductEditRequest.builder()
@@ -243,14 +269,16 @@ class ProductControllerTest {
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("상품 삭제, DB값 변경")
     void delete1() throws Exception {
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
+        Product product = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
+                .build());
 
         //when
         mockMvc.perform(delete("/products/{productId}", product.getId()))
@@ -263,14 +291,16 @@ class ProductControllerTest {
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("존재하지 않는 상품 삭제")
     void delete2() throws Exception {
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
+        Product product = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
+                .build());
 
         //expected
         mockMvc.perform(delete("/products/{productId}", product.getId() + 1))
