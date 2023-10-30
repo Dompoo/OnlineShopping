@@ -11,6 +11,8 @@ import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
 import com.dompoo.onlineshopping.request.PostCreateRequest;
 import com.dompoo.onlineshopping.request.PostEditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -32,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@Slf4j
 class PostControllerTest {
 
     @Autowired private ObjectMapper objectMapper;
@@ -40,9 +44,11 @@ class PostControllerTest {
     @Autowired private PostRepository postRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private TestUtil testUtil;
+    @Autowired private EntityManager em;
 
     @AfterEach
     void clean() {
+        em.clear();
         productRepository.deleteAll();
         postRepository.deleteAll();
         userRepository.deleteAll();
@@ -50,6 +56,7 @@ class PostControllerTest {
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("글 작성")
     void post1() throws Exception {
         //given
@@ -193,11 +200,11 @@ class PostControllerTest {
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("글 제목 수정, DB값 변경")
     void patch1() throws Exception {
         //given
         User findUser = userRepository.findAll().get(0);
-
 
         Product savedProduct = productRepository.save(testUtil.newProductBuilder()
                 .user(findUser)
@@ -222,15 +229,15 @@ class PostControllerTest {
                 .andDo(print());
 
         //then
-        Post findPost = postRepository.findById(post.getId()).orElseThrow(
-                () -> new RuntimeException("글이 존재하지 않습니다.")
-        );
+        Post findPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다."));
         assertEquals("새로운글제목입니다.", findPost.getTitle());
         assertEquals("글내용입니다.", findPost.getContent());
     }
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("글 내용 수정, DB값 변경")
     void patch2() throws Exception {
         //given
@@ -259,15 +266,15 @@ class PostControllerTest {
                 .andDo(print());
 
         //then
-        Post findPost = postRepository.findById(post.getId()).orElseThrow(
-                () -> new RuntimeException("글이 존재하지 않습니다.")
-        );
+        Post findPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다."));
         assertEquals("글제목입니다.", findPost.getTitle());
         assertEquals("새로운글내용입니다.", findPost.getContent());
     }
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("존재하지 않는 글 수정")
     void patch4() throws Exception {
         //given
@@ -298,6 +305,7 @@ class PostControllerTest {
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("글 삭제, DB값 변경")
     void delete1() throws Exception {
         //given
@@ -321,18 +329,18 @@ class PostControllerTest {
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("존재하지 않는 글 삭제")
     void delete2() throws Exception {
         //given
-        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
-                .build());
+        User findUser = userRepository.findAll().get(0);
 
         Product savedProduct = productRepository.save(testUtil.newProductBuilder()
-                .user(addUser)
+                .user(findUser)
                 .build());
 
         Post post = postRepository.save(testUtil.newPostBuilder()
-                .user(addUser)
+                .user(findUser)
                 .product(savedProduct)
                 .build());
 

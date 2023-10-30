@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostService {
 
@@ -62,7 +63,6 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public void edit(Long postId, PostEditRequest postEdit) {
         Post findPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
