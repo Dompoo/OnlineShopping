@@ -1,12 +1,16 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.TestUtil;
 import com.dompoo.onlineshopping.config.MyMockUser;
 import com.dompoo.onlineshopping.domain.Product;
+import com.dompoo.onlineshopping.domain.User;
+import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
 import com.dompoo.onlineshopping.request.ProductCreateRequest;
 import com.dompoo.onlineshopping.request.ProductEditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -35,31 +40,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class ProductControllerDocTest {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ProductRepository productRepository;
+    @Autowired private UserRepository userRepository;
+    @Autowired private TestUtil testUtil;
+    @Autowired private EntityManager em;
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @BeforeEach
+    @AfterEach
     void clean() {
+        em.clear();
         productRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     @MyMockUser
     @DisplayName("상품 등록")
     void test1() throws Exception {
+        //given
         ProductCreateRequest request = ProductCreateRequest.builder()
                 .productName("상품이름입니다.")
                 .price(10000)
                 .build();
 
         String json = objectMapper.writeValueAsString(request);
-        //given
 
         //expected
         this.mockMvc.perform(post("/products")
@@ -80,14 +85,15 @@ public class ProductControllerDocTest {
     @DisplayName("상품 단건 조회")
     void test2() throws Exception {
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
+                .build());
 
         //expected
-        this.mockMvc.perform(get("/products/{productId}", product.getId())
+        this.mockMvc.perform(get("/products/{productId}", savedProduct.getId())
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -107,10 +113,14 @@ public class ProductControllerDocTest {
     @DisplayName("상품 다건 조회")
     void test3() throws Exception {
         //given
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
         List<Product> reqeustProducts = IntStream.range(1, 31)
                 .mapToObj(i -> Product.builder()
                         .productName("상품이름 " + i)
                         .price(10000 * i)
+                        .user(savedUser)
                         .build()
                 )
                 .toList();
@@ -132,14 +142,15 @@ public class ProductControllerDocTest {
 
     @Test
     @MyMockUser
+    @Transactional
     @DisplayName("상품 수정")
     void tets4() throws Exception{
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User findUser = userRepository.findAll().get(0);
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(findUser)
+                .build());
 
         ProductEditRequest productEditRequest =
                 ProductEditRequest.builder()
@@ -148,7 +159,7 @@ public class ProductControllerDocTest {
         String json = objectMapper.writeValueAsString(productEditRequest);
 
         //expected
-        mockMvc.perform(patch("/products/{productId}", product.getId())
+        mockMvc.perform(patch("/products/{productId}", savedProduct.getId())
                         .accept(APPLICATION_JSON)
                         .contentType(APPLICATION_JSON)
                         .content(json)
@@ -171,14 +182,15 @@ public class ProductControllerDocTest {
     @DisplayName("상품 삭제")
     void test5() throws Exception{
         //given
-        Product product = Product.builder()
-                .productName("상품이름입니다.")
-                .price(10000)
-                .build();
-        productRepository.save(product);
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
+                .build());
 
         //expected
-        mockMvc.perform(delete("/products/{productId}", product.getId())
+        mockMvc.perform(delete("/products/{productId}", savedProduct.getId())
                         .accept(APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())

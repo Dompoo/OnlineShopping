@@ -4,10 +4,8 @@ import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.domain.User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class TestUtil {
 
     private static Long count = 0L;
