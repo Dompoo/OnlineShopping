@@ -17,7 +17,7 @@ public class Conversation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.REMOVE)
     private List<Chat> talk = new ArrayList<>();
 
     @ManyToOne

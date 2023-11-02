@@ -24,6 +24,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public final StringPath content = createString("content");
 
+    public final ListPath<Conversation, QConversation> conversations = this.<Conversation, QConversation>createList("conversations", Conversation.class, QConversation.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QProduct product;

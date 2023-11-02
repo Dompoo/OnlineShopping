@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,8 +23,8 @@ public class Post {
     @Lob
     private String content;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private List<Conversation> conversations;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Conversation> conversations = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
