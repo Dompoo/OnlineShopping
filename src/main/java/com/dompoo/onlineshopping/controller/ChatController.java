@@ -13,7 +13,7 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping("/posts/{postId}/conversation")
-    public void startChat(@PathVariable("postId") Long postId) {
-        chatService.startChat(postId);
+    public Long startChat(@PathVariable("postId") Long postId) {
+        return chatService.startChat(postId);
     }
 }
