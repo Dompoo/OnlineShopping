@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,6 +21,9 @@ public class Post {
 
     @Lob
     private String content;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<Conversation> conversations;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
