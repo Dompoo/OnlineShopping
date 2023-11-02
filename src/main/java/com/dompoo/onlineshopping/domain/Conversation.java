@@ -2,6 +2,7 @@ package com.dompoo.onlineshopping.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ public class Conversation {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Builder
     public Conversation(Post post) {
         setPost(post);
     }
