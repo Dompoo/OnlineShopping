@@ -3,7 +3,7 @@ package com.dompoo.onlineshopping.service;
 import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.exception.userException.AlreadyExistsEmailException;
 import com.dompoo.onlineshopping.repository.UserRepository;
-import com.dompoo.onlineshopping.request.SignupRequest;
+import com.dompoo.onlineshopping.request.auth.SignupRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.request;
+package com.dompoo.onlineshopping.request.product;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;

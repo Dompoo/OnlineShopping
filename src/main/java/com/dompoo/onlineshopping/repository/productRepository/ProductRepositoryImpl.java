@@ -2,7 +2,7 @@ package com.dompoo.onlineshopping.repository.productRepository;
 
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.domain.QProduct;
-import com.dompoo.onlineshopping.request.ProductSearch;
+import com.dompoo.onlineshopping.request.product.ProductSearch;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 

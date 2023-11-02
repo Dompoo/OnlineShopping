@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.request;
+package com.dompoo.onlineshopping.request.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

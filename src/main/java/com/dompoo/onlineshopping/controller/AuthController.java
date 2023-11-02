@@ -1,6 +1,6 @@
 package com.dompoo.onlineshopping.controller;
 
-import com.dompoo.onlineshopping.request.SignupRequest;
+import com.dompoo.onlineshopping.request.auth.SignupRequest;
 import com.dompoo.onlineshopping.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

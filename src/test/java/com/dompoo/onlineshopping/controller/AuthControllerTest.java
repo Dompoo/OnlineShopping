@@ -1,7 +1,7 @@
 package com.dompoo.onlineshopping.controller;
 
 import com.dompoo.onlineshopping.repository.UserRepository;
-import com.dompoo.onlineshopping.request.SignupRequest;
+import com.dompoo.onlineshopping.request.auth.SignupRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

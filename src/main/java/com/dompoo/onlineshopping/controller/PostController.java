@@ -1,9 +1,9 @@
 package com.dompoo.onlineshopping.controller;
 
 import com.dompoo.onlineshopping.config.UserPrincipal;
-import com.dompoo.onlineshopping.request.PostCreateRequest;
-import com.dompoo.onlineshopping.request.PostEditRequest;
-import com.dompoo.onlineshopping.request.PostSearch;
+import com.dompoo.onlineshopping.request.post.PostCreateRequest;
+import com.dompoo.onlineshopping.request.post.PostEditRequest;
+import com.dompoo.onlineshopping.request.post.PostSearch;
 import com.dompoo.onlineshopping.response.PostResponse;
 import com.dompoo.onlineshopping.service.PostService;
 import jakarta.validation.Valid;

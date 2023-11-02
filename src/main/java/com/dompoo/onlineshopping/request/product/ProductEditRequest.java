@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.request;
+package com.dompoo.onlineshopping.request.product;
 
 import lombok.Builder;
 import lombok.Getter;
