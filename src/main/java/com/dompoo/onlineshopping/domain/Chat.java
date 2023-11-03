@@ -2,6 +2,7 @@ package com.dompoo.onlineshopping.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +21,7 @@ public class Chat {
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
 
+    @Builder
     public Chat(String message, Conversation conversation) {
         this.message = message;
         setConversation(conversation);
