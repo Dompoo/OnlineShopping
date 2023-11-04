@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,6 +19,8 @@ public class Chat {
 
     private String message;
 
+    private LocalDateTime createdAt;
+
     @ManyToOne
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
@@ -24,6 +28,7 @@ public class Chat {
     @Builder
     public Chat(String message, Conversation conversation) {
         this.message = message;
+        this.createdAt = LocalDateTime.now();
         setConversation(conversation);
     }
 
