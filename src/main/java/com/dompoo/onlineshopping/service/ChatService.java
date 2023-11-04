@@ -9,6 +9,7 @@ import com.dompoo.onlineshopping.repository.ChatRepository;
 import com.dompoo.onlineshopping.repository.ConversationRepository;
 import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
 import com.dompoo.onlineshopping.request.chat.ChatCreateRequest;
+import com.dompoo.onlineshopping.response.ChatResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,11 +47,8 @@ public class ChatService {
                 .build());
     }
 
-    public List<Chat> getChatList(Long convId) {
-        if (conversationRepository.findById(convId).isEmpty()) {
-            throw new ConvNotFound();
-        }
-
-        return chatRepository.findByConversation_IdOrderByCreatedAtAsc(convId);
+    public List<ChatResponse> getChatList(Long convId) {
+        return chatRepository.findByConversation_IdOrderByCreatedAtAsc(convId)
+                .stream().map(ChatResponse::new).toList();
     }
 }

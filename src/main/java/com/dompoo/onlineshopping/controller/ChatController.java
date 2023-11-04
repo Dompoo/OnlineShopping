@@ -1,7 +1,7 @@
 package com.dompoo.onlineshopping.controller;
 
-import com.dompoo.onlineshopping.domain.Chat;
 import com.dompoo.onlineshopping.request.chat.ChatCreateRequest;
+import com.dompoo.onlineshopping.response.ChatResponse;
 import com.dompoo.onlineshopping.service.ChatService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ChatController {
     }
 
     @GetMapping("/posts/{convId}/chat")
-    public List<Chat> getChatList(@PathVariable Long convId) {
+    public List<ChatResponse> getChatList(@PathVariable Long convId) {
         return chatService.getChatList(convId);
     }
 }
