@@ -35,6 +35,6 @@ public class Chat {
     //연관관계 편의 메서드
     public void setConversation(Conversation conversation) {
         this.conversation = conversation;
-        conversation.getTalk().add(this);
+        conversation.getChats().add(this);
     }
 }

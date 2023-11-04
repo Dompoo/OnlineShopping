@@ -24,6 +24,8 @@ public class QChat extends EntityPathBase<Chat> {
 
     public final QConversation conversation;
 
+    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath message = createString("message");

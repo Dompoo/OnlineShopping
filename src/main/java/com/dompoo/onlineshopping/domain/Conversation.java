@@ -19,7 +19,7 @@ public class Conversation {
     private Long id;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.REMOVE)
-    private List<Chat> talk = new ArrayList<>();
+    private List<Chat> chats = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "post_id")

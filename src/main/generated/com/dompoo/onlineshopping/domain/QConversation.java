@@ -22,11 +22,11 @@ public class QConversation extends EntityPathBase<Conversation> {
 
     public static final QConversation conversation = new QConversation("conversation");
 
+    public final ListPath<Chat, QChat> chats = this.<Chat, QChat>createList("chats", Chat.class, QChat.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QPost post;
-
-    public final ListPath<Chat, QChat> talk = this.<Chat, QChat>createList("talk", Chat.class, QChat.class, PathInits.DIRECT2);
 
     public QConversation(String variable) {
         this(Conversation.class, forVariable(variable), INITS);
