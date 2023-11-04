@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -42,5 +44,13 @@ public class ChatService {
                 .message(request.getMessage())
                 .conversation(findConv)
                 .build());
+    }
+
+    public List<Chat> getChatList(Long convId) {
+        if (conversationRepository.findById(convId).isEmpty()) {
+            throw new ConvNotFound();
+        }
+
+        return chatRepository.findByConversation_IdOrderByCreatedAtAsc(convId);
     }
 }
