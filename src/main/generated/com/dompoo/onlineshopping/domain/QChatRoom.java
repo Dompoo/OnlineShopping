@@ -11,40 +11,40 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QConversation is a Querydsl query type for Conversation
+ * QChatRoom is a Querydsl query type for ChatRoom
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QConversation extends EntityPathBase<Conversation> {
+public class QChatRoom extends EntityPathBase<ChatRoom> {
 
-    private static final long serialVersionUID = 1550656461L;
+    private static final long serialVersionUID = 730241181L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QConversation conversation = new QConversation("conversation");
+    public static final QChatRoom chatRoom = new QChatRoom("chatRoom");
 
-    public final ListPath<Chat, QChat> chats = this.<Chat, QChat>createList("chats", Chat.class, QChat.class, PathInits.DIRECT2);
+    public final ListPath<ChatMessage, QChatMessage> chatMessages = this.<ChatMessage, QChatMessage>createList("chatMessages", ChatMessage.class, QChatMessage.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QPost post;
 
-    public QConversation(String variable) {
-        this(Conversation.class, forVariable(variable), INITS);
+    public QChatRoom(String variable) {
+        this(ChatRoom.class, forVariable(variable), INITS);
     }
 
-    public QConversation(Path<? extends Conversation> path) {
+    public QChatRoom(Path<? extends ChatRoom> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QConversation(PathMetadata metadata) {
+    public QChatRoom(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QConversation(PathMetadata metadata, PathInits inits) {
-        this(Conversation.class, metadata, inits);
+    public QChatRoom(PathMetadata metadata, PathInits inits) {
+        this(ChatRoom.class, metadata, inits);
     }
 
-    public QConversation(Class<? extends Conversation> type, PathMetadata metadata, PathInits inits) {
+    public QChatRoom(Class<? extends ChatRoom> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.post = inits.isInitialized("post") ? new QPost(forProperty("post"), inits.get("post")) : null;
     }

@@ -24,7 +24,7 @@ public class Post {
     private String content;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Conversation> conversations = new ArrayList<>();
+    private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")

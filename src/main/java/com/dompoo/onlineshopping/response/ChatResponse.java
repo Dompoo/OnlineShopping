@@ -1,6 +1,6 @@
 package com.dompoo.onlineshopping.response;
 
-import com.dompoo.onlineshopping.domain.Chat;
+import com.dompoo.onlineshopping.domain.ChatMessage;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,9 +10,9 @@ public class ChatResponse {
     private final Long id;
     private final String message;
 
-    public ChatResponse(Chat chat) {
-        this.id = chat.getId();
-        this.message = chat.getMessage();
+    public ChatResponse(ChatMessage message) {
+        this.id = message.getId();
+        this.message = message.getMessage();
     }
 
     @Builder

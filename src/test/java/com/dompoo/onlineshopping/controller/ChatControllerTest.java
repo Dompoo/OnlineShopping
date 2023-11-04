@@ -2,8 +2,8 @@ package com.dompoo.onlineshopping.controller;
 
 import com.dompoo.onlineshopping.TestUtil;
 import com.dompoo.onlineshopping.domain.*;
-import com.dompoo.onlineshopping.repository.ChatRepository;
-import com.dompoo.onlineshopping.repository.ConversationRepository;
+import com.dompoo.onlineshopping.repository.ChatMessageRepository;
+import com.dompoo.onlineshopping.repository.ChatRoomRepository;
 import com.dompoo.onlineshopping.repository.UserRepository;
 import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
 import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
@@ -36,17 +36,17 @@ class ChatControllerTest {
     @Autowired private ProductRepository productRepository;
     @Autowired private PostRepository postRepository;
     @Autowired private UserRepository userRepository;
-    @Autowired private ChatRepository chatRepository;
-    @Autowired private ConversationRepository conversationRepository;
+    @Autowired private ChatMessageRepository chatMessageRepository;
+    @Autowired private ChatRoomRepository chatRoomRepository;
     @Autowired private TestUtil testUtil;
 
     @AfterEach
     void clean() {
+        chatMessageRepository.deleteAll();
+        chatRoomRepository.deleteAll();
         userRepository.deleteAll();
-        chatRepository.deleteAll();
         postRepository.deleteAll();
         productRepository.deleteAll();
-        conversationRepository.deleteAll();
     }
 
     @Test
@@ -66,7 +66,7 @@ class ChatControllerTest {
                 .build());
 
         //expected
-        mockMvc.perform(post("/posts/{postId}/conversation", savedPost.getId()))
+        mockMvc.perform(post("/posts/{postId}/chatRoom", savedPost.getId()))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -87,7 +87,7 @@ class ChatControllerTest {
                 .product(savedProduct)
                 .build());
 
-        Conversation savedConv = conversationRepository.save(Conversation.builder()
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
                 .post(savedPost)
                 .build());
 
@@ -98,7 +98,7 @@ class ChatControllerTest {
         String json = objectMapper.writeValueAsString(request);
 
         //expected
-        mockMvc.perform(post("/posts/{convId}/chat", savedConv.getId())
+        mockMvc.perform(post("/posts/{roomId}/chat", savedRoom.getId())
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
@@ -122,22 +122,22 @@ class ChatControllerTest {
                 .product(savedProduct)
                 .build());
 
-        Conversation savedConv = conversationRepository.save(Conversation.builder()
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
                 .post(savedPost)
                 .build());
 
-        Chat savedChat1 = chatRepository.save(Chat.builder()
+        ChatMessage savedChat1 = chatMessageRepository.save(ChatMessage.builder()
                 .message("첫번째 채팅!")
-                .conversation(savedConv)
+                .chatRoom(savedRoom)
                 .build());
 
-        Chat savedChat2 = chatRepository.save(Chat.builder()
+        ChatMessage savedChat2 = chatMessageRepository.save(ChatMessage.builder()
                 .message("두번째 채팅!")
-                .conversation(savedConv)
+                .chatRoom(savedRoom)
                 .build());
 
         //when
-        mockMvc.perform(get("/posts/{convId}/chat", savedConv.getId()))
+        mockMvc.perform(get("/posts/{roomId}/chat", savedRoom.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(2)))
                 .andExpect(jsonPath("$[0].message").value("첫번째 채팅!"))

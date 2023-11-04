@@ -12,28 +12,28 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Conversation {
+public class ChatRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "conversation", cascade = CascadeType.REMOVE)
-    private List<Chat> chats = new ArrayList<>();
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
+    private List<ChatMessage> chatMessages = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
     @Builder
-    public Conversation(Post post) {
+    public ChatRoom(Post post) {
         setPost(post);
     }
 
     //연관관계 편의 메서드
     private void setPost(Post post) {
         this.post = post;
-        post.getConversations().add(this);
+        post.getChatRooms().add(this);
     }
 
 

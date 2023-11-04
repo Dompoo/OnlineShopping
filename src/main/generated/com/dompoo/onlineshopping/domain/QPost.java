@@ -22,9 +22,9 @@ public class QPost extends EntityPathBase<Post> {
 
     public static final QPost post = new QPost("post");
 
-    public final StringPath content = createString("content");
+    public final ListPath<ChatRoom, QChatRoom> chatRooms = this.<ChatRoom, QChatRoom>createList("chatRooms", ChatRoom.class, QChatRoom.class, PathInits.DIRECT2);
 
-    public final ListPath<Conversation, QConversation> conversations = this.<Conversation, QConversation>createList("conversations", Conversation.class, QConversation.class, PathInits.DIRECT2);
+    public final StringPath content = createString("content");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

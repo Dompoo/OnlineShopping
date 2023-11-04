@@ -17,18 +17,18 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @PostMapping("/posts/{postId}/conversation")
+    @PostMapping("/posts/{postId}/chatRoom")
     public Long startChat(@PathVariable Long postId) {
-        return chatService.startChat(postId);
+        return chatService.startChatRoom(postId);
     }
 
-    @PostMapping("/posts/{convId}/chat")
-    public void sendChat(@PathVariable Long convId, @RequestBody @Valid ChatCreateRequest request) {
-        chatService.sendChat(convId, request);
+    @PostMapping("/posts/{roomId}/chat")
+    public void sendChat(@PathVariable Long roomId, @RequestBody @Valid ChatCreateRequest request) {
+        chatService.sendMessage(roomId, request);
     }
 
-    @GetMapping("/posts/{convId}/chat")
-    public List<ChatResponse> getChatList(@PathVariable Long convId) {
-        return chatService.getChatList(convId);
+    @GetMapping("/posts/{roomId}/chat")
+    public List<ChatResponse> getChatList(@PathVariable Long roomId) {
+        return chatService.getMessageList(roomId);
     }
 }

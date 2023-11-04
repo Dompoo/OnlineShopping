@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Chat {
+public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,19 +22,19 @@ public class Chat {
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "conversation_id")
-    private Conversation conversation;
+    @JoinColumn(name = "chatroom_id")
+    private ChatRoom chatRoom;
 
     @Builder
-    public Chat(String message, Conversation conversation) {
+    public ChatMessage(String message, ChatRoom chatRoom) {
         this.message = message;
         this.createdAt = LocalDateTime.now();
-        setConversation(conversation);
+        setChatRoom(chatRoom);
     }
 
     //연관관계 편의 메서드
-    public void setConversation(Conversation conversation) {
-        this.conversation = conversation;
-        conversation.getChats().add(this);
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+        chatRoom.getChatMessages().add(this);
     }
 }
