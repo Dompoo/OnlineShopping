@@ -84,3 +84,29 @@ include::{snippets}/product-delete/http-request.adoc[]
 include::{snippets}/product-delete/path-parameters.adoc[]
 ==== 응답
 include::{snippets}/product-delete/http-response.adoc[]
+
+
+== 채팅
+
+=== 채팅방 생성
+==== 요청
+include::{snippets}/chatRoom-craete/http-response.adoc[]
+include::{snippets}/chatRoom-craete/path-parameters.adoc[]
+==== 응답
+include::{snippets}/chatRoom-craete/http-response.adoc[]
+
+=== 채팅 보내기
+==== 요청
+include::{snippets}/chatMessage-craete/http-request.adoc[]
+include::{snippets}/chatMessage-craete/path-parameters.adoc[]
+include::{snippets}/chatMessage-craete/request-fields.adoc[]
+==== 응답
+include::{snippets}/chatMessage-craete/http-response.adoc[]
+
+=== 채팅 조회
+==== 요청
+include::{snippets}/chatMessage-getList/http-request.adoc[]
+include::{snippets}/chatMessage-getList/path-parameters.adoc[]
+==== 응답
+include::{snippets}/chatMessage-getList/http-response.adoc[]
+include::{snippets}/chatMessage-getList/response-fields.adoc[]

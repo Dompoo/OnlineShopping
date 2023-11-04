@@ -117,6 +117,9 @@ public class ChatControllerDocTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("chatMessage-craete",
+                        pathParameters(
+                                parameterWithName("roomId").description("채팅방 ID")
+                        ),
                         requestFields(
                                 fieldWithPath("message").description("채팅 메시지")
                         )
@@ -161,6 +164,9 @@ public class ChatControllerDocTest {
                 .andExpect(jsonPath("$[1].message").value("두번째 채팅!"))
                 .andDo(print())
                 .andDo(document("chatMessage-getList",
+                        pathParameters(
+                                parameterWithName("roomId").description("채팅방 ID")
+                        ),
                         responseFields(
                                 fieldWithPath("[].id").description("채팅 ID"),
                                 fieldWithPath("[].message").description("채팅 내용")
