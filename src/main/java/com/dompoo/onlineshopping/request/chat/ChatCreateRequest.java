@@ -1,14 +1,12 @@
 package com.dompoo.onlineshopping.request.chat;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Getter
 @Setter
+@Getter
 @ToString
+@NoArgsConstructor
 public class ChatCreateRequest {
 
     @NotBlank(message = "내용을 입력해주세요.")
