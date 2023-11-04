@@ -1,4 +1,4 @@
-package com.dompoo.onlineshopping.exception;
+package com.dompoo.onlineshopping.exception.chatException;
 
 import lombok.Getter;
 

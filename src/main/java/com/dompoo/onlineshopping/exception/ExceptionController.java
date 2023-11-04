@@ -1,7 +1,9 @@
 package com.dompoo.onlineshopping.exception;
 
+import com.dompoo.onlineshopping.exception.chatException.ChatException;
 import com.dompoo.onlineshopping.exception.postException.PostException;
 import com.dompoo.onlineshopping.exception.productException.ProductException;
+import com.dompoo.onlineshopping.exception.userException.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +48,32 @@ public class ExceptionController {
 
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<ErrorResponse> productException(ProductException e) {
+        ErrorResponse errorBody = ErrorResponse.builder()
+                .code(e.statusCode())
+                .message(e.getMessage())
+                .validation(e.getValidation())
+                .build();
+
+        return ResponseEntity
+                .status(Integer.parseInt(e.statusCode()))
+                .body(errorBody);
+    }
+
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<ErrorResponse> userException(ProductException e) {
+        ErrorResponse errorBody = ErrorResponse.builder()
+                .code(e.statusCode())
+                .message(e.getMessage())
+                .validation(e.getValidation())
+                .build();
+
+        return ResponseEntity
+                .status(Integer.parseInt(e.statusCode()))
+                .body(errorBody);
+    }
+
+    @ExceptionHandler(ChatException.class)
+    public ResponseEntity<ErrorResponse> chatException(ProductException e) {
         ErrorResponse errorBody = ErrorResponse.builder()
                 .code(e.statusCode())
                 .message(e.getMessage())
