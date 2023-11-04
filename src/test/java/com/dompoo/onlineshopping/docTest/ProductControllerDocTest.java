@@ -1,15 +1,13 @@
-package com.dompoo.onlineshopping.controller;
+package com.dompoo.onlineshopping.docTest;
 
 import com.dompoo.onlineshopping.TestUtil;
 import com.dompoo.onlineshopping.config.MyMockUser;
-import com.dompoo.onlineshopping.domain.Post;
 import com.dompoo.onlineshopping.domain.Product;
 import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.repository.UserRepository;
-import com.dompoo.onlineshopping.repository.postRepository.PostRepository;
 import com.dompoo.onlineshopping.repository.productRepository.ProductRepository;
-import com.dompoo.onlineshopping.request.post.PostCreateRequest;
-import com.dompoo.onlineshopping.request.post.PostEditRequest;
+import com.dompoo.onlineshopping.request.product.ProductCreateRequest;
+import com.dompoo.onlineshopping.request.product.ProductEditRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
@@ -40,11 +38,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "api.onlineshopping.com", uriPort = 443)
 @ExtendWith(RestDocumentationExtension.class)
-public class PostControllerDocTest {
+public class ProductControllerDocTest {
 
     @Autowired private ObjectMapper objectMapper;
     @Autowired private MockMvc mockMvc;
-    @Autowired private PostRepository postRepository;
     @Autowired private ProductRepository productRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private TestUtil testUtil;
@@ -53,49 +50,39 @@ public class PostControllerDocTest {
     @AfterEach
     void clean() {
         em.clear();
-        postRepository.deleteAll();
         productRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @Test
     @MyMockUser
-    @Transactional
-    @DisplayName("글 등록")
+    @DisplayName("상품 등록")
     void test1() throws Exception {
         //given
-        User findUser = userRepository.findAll().get(0);
-
-        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
-                .user(findUser)
-                .build());
-
-        PostCreateRequest request = PostCreateRequest.builder()
-                .title("글제목입니다.")
-                .content("글내용입니다.")
-                .productId(savedProduct.getId())
+        ProductCreateRequest request = ProductCreateRequest.builder()
+                .productName("상품이름입니다.")
+                .price(10000)
                 .build();
 
         String json = objectMapper.writeValueAsString(request);
 
         //expected
-        this.mockMvc.perform(post("/posts")
+        this.mockMvc.perform(post("/products")
                         .accept(APPLICATION_JSON)
                         .contentType(APPLICATION_JSON)
                         .content(json))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("post-craete",
+                .andDo(document("product-craete",
                         requestFields(
-                                fieldWithPath("title").description("게시글 제목").optional(),
-                                fieldWithPath("content").description("게시글 내용").optional(),
-                                fieldWithPath("productId").description("상품 ID")
+                                fieldWithPath("productName").description("상품 이름").optional(),
+                                fieldWithPath("price").description("상품 가격").optional()
                         )
                 ));
     }
 
     @Test
-    @DisplayName("글 단건 조회")
+    @DisplayName("상품 단건 조회")
     void test2() throws Exception {
         //given
         User savedUser = userRepository.save(testUtil.newUserBuilder()
@@ -105,60 +92,50 @@ public class PostControllerDocTest {
                 .user(savedUser)
                 .build());
 
-        Post savedPost = postRepository.save(testUtil.newPostBuilder()
-                .user(savedUser)
-                .product(savedProduct)
-                .build());
-
         //expected
-        this.mockMvc.perform(get("/posts/{postId}", savedPost.getId())
+        this.mockMvc.perform(get("/products/{productId}", savedProduct.getId())
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("post-getOne",
+                .andDo(document("product-getOne",
                         pathParameters(
-                                parameterWithName("postId").description("게시글 ID")
+                                parameterWithName("productId").description("상품 ID")
                         ),
                         responseFields(
-                                fieldWithPath("id").description("게시글 ID"),
-                                fieldWithPath("title").description("게시글 제목"),
-                                fieldWithPath("content").description("게시글 내용")
+                                fieldWithPath("id").description("상품 ID"),
+                                fieldWithPath("productName").description("상품 이름"),
+                                fieldWithPath("price").description("상품 가격")
                         )
                 ));
     }
 
     @Test
-    @DisplayName("글 다건 조회")
+    @DisplayName("상품 다건 조회")
     void test3() throws Exception {
         //given
         User savedUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
-        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
-                .user(savedUser)
-                .build());
-
-        List<Post> requestPosts = IntStream.range(1, 31)
-                .mapToObj(i -> Post.builder()
-                        .title("제목 " + i)
-                        .content("내용 " + i)
+        List<Product> reqeustProducts = IntStream.range(1, 31)
+                .mapToObj(i -> Product.builder()
+                        .productName("상품이름 " + i)
+                        .price(10000 * i)
                         .user(savedUser)
-                        .product(savedProduct)
                         .build()
                 )
                 .toList();
-        postRepository.saveAll(requestPosts);
+        productRepository.saveAll(reqeustProducts);
 
         //expected
-        mockMvc.perform(get("/posts?page=1&size=5")
+        mockMvc.perform(get("/products?page=1&size=5")
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("post-getList",
+                .andDo(document("product-getList",
                         responseFields(
-                                fieldWithPath("[].id").description("게시글 ID"),
-                                fieldWithPath("[].title").description("게시글 제목"),
-                                fieldWithPath("[].content").description("게시글 내용")
+                                fieldWithPath("[].id").description("상품 ID"),
+                                fieldWithPath("[].productName").description("상품 제목"),
+                                fieldWithPath("[].price").description("상품 가격")
                         )
                 ));
     }
@@ -166,7 +143,7 @@ public class PostControllerDocTest {
     @Test
     @MyMockUser
     @Transactional
-    @DisplayName("글 수정")
+    @DisplayName("상품 수정")
     void tets4() throws Exception{
         //given
         User findUser = userRepository.findAll().get(0);
@@ -175,62 +152,52 @@ public class PostControllerDocTest {
                 .user(findUser)
                 .build());
 
-        Post savedPost = postRepository.save(testUtil.newPostBuilder()
-                .user(findUser)
-                .product(savedProduct)
-                .build());
-
-        PostEditRequest postEditRequest = PostEditRequest.builder()
-                .title("새로운글제목입니다.")
-                .content("새로운글내용입니다.")
-                .build();
-        String json = objectMapper.writeValueAsString(postEditRequest);
+        ProductEditRequest productEditRequest =
+                ProductEditRequest.builder()
+                        .productName("새상품이름입니다.")
+                        .build();
+        String json = objectMapper.writeValueAsString(productEditRequest);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}", savedPost.getId())
+        mockMvc.perform(patch("/products/{productId}", savedProduct.getId())
                         .accept(APPLICATION_JSON)
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("post-update",
+                .andDo(document("product-update",
                         pathParameters(
-                                parameterWithName("postId").description("업데이트할 게시글 ID")
+                                parameterWithName("productId").description("업데이트할 상품 ID")
                         ),
                         requestFields(
-                                fieldWithPath("title").description("업데이트할 게시글 제목"),
-                                fieldWithPath("content").description("업데이트할 게시글 내용")
+                                fieldWithPath("productName").description("업데이트할 상품 이름"),
+                                fieldWithPath("price").description("업데이트할 상품 가격")
                         )
                 ));
     }
 
     @Test
     @MyMockUser
-    @Transactional
-    @DisplayName("글 삭제")
+    @DisplayName("상품 삭제")
     void test5() throws Exception{
         //given
-        User findUser = userRepository.findAll().get(0);
-
-        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
-                .user(findUser)
+        User savedUser = userRepository.save(testUtil.newUserBuilder()
                 .build());
 
-        Post savedPost = postRepository.save(testUtil.newPostBuilder()
-                .user(findUser)
-                .product(savedProduct)
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(savedUser)
                 .build());
 
         //expected
-        mockMvc.perform(delete("/posts/{postId}", savedPost.getId())
+        mockMvc.perform(delete("/products/{productId}", savedProduct.getId())
                         .accept(APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("post-delete",
+                .andDo(document("product-delete",
                         pathParameters(
-                                parameterWithName("postId").description("삭제할 게시글 ID")
+                                parameterWithName("productId").description("삭제할 상품 ID")
                         )
                 ));
 
