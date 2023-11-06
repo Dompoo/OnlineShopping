@@ -20,8 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -126,26 +125,49 @@ class ChatControllerTest {
                 .post(savedPost)
                 .build());
 
-        ChatMessage savedChat1 = chatMessageRepository.save(ChatMessage.builder()
+        chatMessageRepository.save(ChatMessage.builder()
                 .message("첫번째 채팅!")
                 .chatRoom(savedRoom)
                 .build());
 
-        ChatMessage savedChat2 = chatMessageRepository.save(ChatMessage.builder()
+        chatMessageRepository.save(ChatMessage.builder()
                 .message("두번째 채팅!")
                 .chatRoom(savedRoom)
                 .build());
 
-        //when
+        //expected
         mockMvc.perform(get("/posts/{roomId}/chat", savedRoom.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(2)))
                 .andExpect(jsonPath("$[0].message").value("첫번째 채팅!"))
                 .andExpect(jsonPath("$[1].message").value("두번째 채팅!"))
                 .andDo(print());
+    }
 
-        //then
+    @Test
+    @DisplayName("채팅방 나가기")
+    void deleteChat() throws Exception {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
 
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
+                .post(savedPost)
+                .build());
+
+        //expected
+        mockMvc.perform(delete("/posts/{roomId}/chat", savedRoom.getId()))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
 }

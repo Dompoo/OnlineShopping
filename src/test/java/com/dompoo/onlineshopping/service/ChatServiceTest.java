@@ -137,4 +137,31 @@ class ChatServiceTest {
         assertEquals("첫번째 채팅", findChats.get(0).getMessage());
         assertEquals("두번째 채팅", findChats.get(1).getMessage());
     }
+
+    @Test
+    @DisplayName("채팅방 나가기")
+    void deleteChatRoom() {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
+                .post(savedPost)
+                .build());
+
+        //when
+        chatService.deleteChatRoom(savedRoom.getId());
+
+        //then
+        assertEquals(0L, chatRoomRepository.count());
+    }
 }

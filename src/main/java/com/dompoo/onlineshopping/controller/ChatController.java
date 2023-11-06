@@ -31,4 +31,10 @@ public class ChatController {
     public List<ChatResponse> getChatList(@PathVariable Long roomId) {
         return chatService.getMessageList(roomId);
     }
+
+    @DeleteMapping("/posts/{roomId}/chat")
+    public void deleteChat(@PathVariable Long roomId) {
+        chatService.deleteChatRoom(roomId);
+    }
+
 }

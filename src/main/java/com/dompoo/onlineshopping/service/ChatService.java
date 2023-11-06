@@ -51,4 +51,8 @@ public class ChatService {
         return chatMessageRepository.findByChatRoom_IdOrderByCreatedAtAsc(roomId)
                 .stream().map(ChatResponse::new).toList();
     }
+
+    public void deleteChatRoom(Long roomId) {
+        chatRoomRepository.deleteById(roomId);
+    }
 }
