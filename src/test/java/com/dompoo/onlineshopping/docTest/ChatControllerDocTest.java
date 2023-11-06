@@ -1,6 +1,7 @@
 package com.dompoo.onlineshopping.docTest;
 
 import com.dompoo.onlineshopping.TestUtil;
+import com.dompoo.onlineshopping.config.MyMockUser;
 import com.dompoo.onlineshopping.domain.*;
 import com.dompoo.onlineshopping.repository.ChatMessageRepository;
 import com.dompoo.onlineshopping.repository.ChatRoomRepository;
@@ -56,6 +57,7 @@ public class ChatControllerDocTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("대화 시작")
     void startChat() throws Exception {
         //given
@@ -83,6 +85,7 @@ public class ChatControllerDocTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("채팅 보내기")
     void sendChat() throws Exception {
         //given
@@ -126,6 +129,7 @@ public class ChatControllerDocTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("채팅 조회하기")
     void getChatList() throws Exception {
         //given
@@ -174,6 +178,7 @@ public class ChatControllerDocTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("채팅방 나가기")
     void deleteChat() throws Exception {
         //given

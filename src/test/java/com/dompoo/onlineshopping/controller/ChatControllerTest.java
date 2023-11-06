@@ -1,6 +1,7 @@
 package com.dompoo.onlineshopping.controller;
 
 import com.dompoo.onlineshopping.TestUtil;
+import com.dompoo.onlineshopping.config.MyMockUser;
 import com.dompoo.onlineshopping.domain.*;
 import com.dompoo.onlineshopping.repository.ChatMessageRepository;
 import com.dompoo.onlineshopping.repository.ChatRoomRepository;
@@ -49,6 +50,7 @@ class ChatControllerTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("대화 시작")
     void startChat() throws Exception {
         //given
@@ -71,6 +73,7 @@ class ChatControllerTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("존재하지 않는 글의 대화 시작")
     void startChatFail() throws Exception {
         //given
@@ -95,6 +98,7 @@ class ChatControllerTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("채팅 보내기")
     void sendChat() throws Exception {
         //given
@@ -130,6 +134,7 @@ class ChatControllerTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("존재하지 않는 채팅방으로 채팅 보내기")
     void sendChatFail() throws Exception {
         //given
@@ -167,6 +172,7 @@ class ChatControllerTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("채팅 조회하기")
     void getChatList() throws Exception {
         //given
@@ -206,6 +212,7 @@ class ChatControllerTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("존재하지 않는 채팅방의 채팅 조회하기")
     void getChatListFail() throws Exception {
         //given
@@ -244,6 +251,7 @@ class ChatControllerTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("채팅방 나가기")
     void deleteChat() throws Exception {
         //given
@@ -270,6 +278,7 @@ class ChatControllerTest {
     }
 
     @Test
+    @MyMockUser
     @DisplayName("존재하지 않는 Id의 채팅방 나가기")
     void deleteChatFail() throws Exception {
         //given
