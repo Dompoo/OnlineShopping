@@ -48,11 +48,17 @@ public class ChatService {
     }
 
     public List<ChatResponse> getMessageList(Long roomId) {
+        chatRoomRepository.findById(roomId)
+                .orElseThrow(RoomNotFound::new);
+
         return chatMessageRepository.findByChatRoom_IdOrderByCreatedAtAsc(roomId)
                 .stream().map(ChatResponse::new).toList();
     }
 
     public void deleteChatRoom(Long roomId) {
-        chatRoomRepository.deleteById(roomId);
+        ChatRoom findRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(RoomNotFound::new);
+
+        chatRoomRepository.delete(findRoom);
     }
 }
