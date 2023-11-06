@@ -28,7 +28,7 @@ public class MyMockSecurityContext implements WithSecurityContextFactory<MyMockU
 
         UserPrincipal principal = new UserPrincipal(user);
 
-        SimpleGrantedAuthority role = new SimpleGrantedAuthority("ROLE_ADMIN");
+        SimpleGrantedAuthority role = new SimpleGrantedAuthority("ROLE_USER");
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(principal, user.getPassword(), List.of(role));
 
