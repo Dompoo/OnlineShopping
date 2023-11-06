@@ -90,7 +90,7 @@ class ChatControllerTest {
         mockMvc.perform(post("/posts/{postId}/chatRoom", savedPost.getId() + 1))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("404"))
-                .andExpect(jsonPath("$.message").value("존재하지 않는 글ㅅ입니다."))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 글입니다."))
                 .andDo(print());
     }
 
