@@ -71,6 +71,30 @@ class ChatControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 글의 대화 시작")
+    void startChatFail() throws Exception {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        //expected
+        mockMvc.perform(post("/posts/{postId}/chatRoom", savedPost.getId() + 1))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("404"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 글ㅅ입니다."))
+                .andDo(print());
+    }
+
+    @Test
     @DisplayName("채팅 보내기")
     void sendChat() throws Exception {
         //given
@@ -102,6 +126,43 @@ class ChatControllerTest {
                         .content(json)
                 )
                 .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 채팅방으로 채팅 보내기")
+    void sendChatFail() throws Exception {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
+                .post(savedPost)
+                .build());
+
+        ChatCreateRequest request = ChatCreateRequest.builder()
+                .message("채팅내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
+        //expected
+        mockMvc.perform(post("/posts/{roomId}/chat", savedRoom.getId() + 1)
+                        .contentType(APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("존재하지 않는 채팅방입니다."))
+                .andExpect(jsonPath("$.code").value("404"))
                 .andDo(print());
     }
 
@@ -145,6 +206,44 @@ class ChatControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 채팅방의 채팅 조회하기")
+    void getChatListFail() throws Exception {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
+                .post(savedPost)
+                .build());
+
+        chatMessageRepository.save(ChatMessage.builder()
+                .message("첫번째 채팅!")
+                .chatRoom(savedRoom)
+                .build());
+
+        chatMessageRepository.save(ChatMessage.builder()
+                .message("두번째 채팅!")
+                .chatRoom(savedRoom)
+                .build());
+
+        //expected
+        mockMvc.perform(get("/posts/{roomId}/chat", savedRoom.getId() + 1))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("존재하지 않는 채팅방입니다."))
+                .andExpect(jsonPath("$.code").value("404"))
+                .andDo(print());
+    }
+
+    @Test
     @DisplayName("채팅방 나가기")
     void deleteChat() throws Exception {
         //given
@@ -167,6 +266,34 @@ class ChatControllerTest {
         //expected
         mockMvc.perform(delete("/posts/{roomId}/chat", savedRoom.getId()))
                 .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 Id의 채팅방 나가기")
+    void deleteChatFail() throws Exception {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
+                .post(savedPost)
+                .build());
+
+        //expected
+        mockMvc.perform(delete("/posts/{roomId}/chat", savedRoom.getId() + 1))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("존재하지 않는 채팅방입니다."))
+                .andExpect(jsonPath("$.code").value("404"))
                 .andDo(print());
     }
 

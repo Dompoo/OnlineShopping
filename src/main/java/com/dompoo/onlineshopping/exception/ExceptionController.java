@@ -60,7 +60,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(UserException.class)
-    public ResponseEntity<ErrorResponse> userException(ProductException e) {
+    public ResponseEntity<ErrorResponse> userException(UserException e) {
         ErrorResponse errorBody = ErrorResponse.builder()
                 .code(e.statusCode())
                 .message(e.getMessage())
@@ -73,7 +73,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(ChatException.class)
-    public ResponseEntity<ErrorResponse> chatException(ProductException e) {
+    public ResponseEntity<ErrorResponse> chatException(ChatException e) {
         ErrorResponse errorBody = ErrorResponse.builder()
                 .code(e.statusCode())
                 .message(e.getMessage())
