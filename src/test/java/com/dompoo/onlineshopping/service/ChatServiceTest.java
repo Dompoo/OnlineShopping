@@ -2,6 +2,8 @@ package com.dompoo.onlineshopping.service;
 
 import com.dompoo.onlineshopping.TestUtil;
 import com.dompoo.onlineshopping.domain.*;
+import com.dompoo.onlineshopping.exception.chatException.RoomNotFound;
+import com.dompoo.onlineshopping.exception.postException.PostNotFound;
 import com.dompoo.onlineshopping.repository.ChatMessageRepository;
 import com.dompoo.onlineshopping.repository.ChatRoomRepository;
 import com.dompoo.onlineshopping.repository.UserRepository;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class ChatServiceTest {
@@ -64,6 +67,31 @@ class ChatServiceTest {
     }
 
     @Test
+    @DisplayName("채팅방 생성 실패")
+    void startChatFail() {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        //expected
+        PostNotFound e = assertThrows(PostNotFound.class,
+                () -> chatService.startChatRoom(savedPost.getId() + 1));
+        assertEquals("존재하지 않는 글입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
+
+
+    }
+
+    @Test
     @DisplayName("채팅 보내기")
     void sendChat() {
         //given
@@ -96,7 +124,35 @@ class ChatServiceTest {
         List<ChatMessage> findChats = chatMessageRepository.findByChatRoom_IdOrderByCreatedAtAsc(savedRoom.getId());
         assertEquals("첫번째 채팅", findChats.get(0).getMessage());
         assertEquals("두번째 채팅", findChats.get(1).getMessage());
+    }
 
+    @Test
+    @DisplayName("채팅 보내기 실패")
+    void sendChatFail() {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
+                .post(savedPost)
+                .build());
+
+        //expected
+        RoomNotFound e = assertThrows(RoomNotFound.class,
+                () -> chatService.sendMessage(savedRoom.getId() + 1, ChatCreateRequest.builder()
+                        .message("채팅 내용")
+                        .build()));
+        assertEquals("존재하지 않는 채팅방입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
     }
 
     @Test
@@ -139,6 +195,44 @@ class ChatServiceTest {
     }
 
     @Test
+    @DisplayName("채팅리스트 조회 실패")
+    void getChatListFail() {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
+                .post(savedPost)
+                .build());
+
+        chatMessageRepository.save(ChatMessage.builder()
+                .chatRoom(savedRoom)
+                .message("첫번째 채팅")
+                .build());
+
+        chatMessageRepository.save(ChatMessage.builder()
+                .chatRoom(savedRoom)
+                .message("두번째 채팅")
+                .build());
+
+        //expected
+        RoomNotFound e = assertThrows(RoomNotFound.class,
+                () -> chatService.getMessageList(savedRoom.getId() + 1));
+        assertEquals("존재하지 않는 채팅방입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
+
+    }
+
+    @Test
     @DisplayName("채팅방 나가기")
     void deleteChatRoom() {
         //given
@@ -163,5 +257,32 @@ class ChatServiceTest {
 
         //then
         assertEquals(0L, chatRoomRepository.count());
+    }
+
+    @Test
+    @DisplayName("채팅방 나가기 실패")
+    void deleteChatRoomFail() {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
+                .post(savedPost)
+                .build());
+
+        //expected
+        RoomNotFound e = assertThrows(RoomNotFound.class,
+                () -> chatService.deleteChatRoom(savedRoom.getId() + 1));
+        assertEquals("존재하지 않는 채팅방입니다.", e.getMessage());
+        assertEquals("404", e.statusCode());
     }
 }
