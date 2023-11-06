@@ -11,3 +11,9 @@
 * Querydsl
 * Spring Data JPA
 * VUE.js
+
+## TODO
+
+* 채팅방, 메시지 정보에 유저 정보를 포함
+* 채팅내역 출력할 때 유저정보도 같이 뿌릴 수 있도록
+* 채팅 ResponseDto 사용
