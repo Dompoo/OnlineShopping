@@ -23,8 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -170,6 +169,37 @@ public class ChatControllerDocTest {
                         responseFields(
                                 fieldWithPath("[].id").description("채팅 ID"),
                                 fieldWithPath("[].message").description("채팅 내용")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("채팅방 나가기")
+    void deleteChat() throws Exception {
+        //given
+        User addUser = userRepository.save(testUtil.newUserBuilderPlain()
+                .build());
+
+        Product savedProduct = productRepository.save(testUtil.newProductBuilder()
+                .user(addUser)
+                .build());
+
+        Post savedPost = postRepository.save(testUtil.newPostBuilder()
+                .user(addUser)
+                .product(savedProduct)
+                .build());
+
+        ChatRoom savedRoom = chatRoomRepository.save(ChatRoom.builder()
+                .post(savedPost)
+                .build());
+
+        //expected
+        mockMvc.perform(delete("/posts/{roomId}/chat", savedRoom.getId()))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("chatRoom-delete",
+                        pathParameters(
+                                parameterWithName("roomId").description("채팅방 ID")
                         )
                 ));
     }

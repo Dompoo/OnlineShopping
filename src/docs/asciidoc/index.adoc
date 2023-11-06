@@ -110,3 +110,10 @@ include::{snippets}/chatMessage-getList/path-parameters.adoc[]
 ==== 응답
 include::{snippets}/chatMessage-getList/http-response.adoc[]
 include::{snippets}/chatMessage-getList/response-fields.adoc[]
+
+=== 채팅방 나가기
+==== 요청
+include::{snippets}/chatRoom-delete/http-response.adoc[]
+include::{snippets}/chatRoom-delete/path-parameters.adoc[]
+==== 응답
+include::{snippets}/chatRoom-delete/http-response.adoc[]
