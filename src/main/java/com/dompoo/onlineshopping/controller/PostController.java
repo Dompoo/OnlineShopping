@@ -22,7 +22,7 @@ public class PostController {
 
     private final PostService postService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/posts")
     public void post(@AuthenticationPrincipal UserPrincipal principal, @RequestBody @Valid PostCreateRequest request) {
         postService.write(request, principal.getUserId());
@@ -38,13 +38,13 @@ public class PostController {
         return postService.getList(postSearch);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/posts/{postId}")
     public void patch(@PathVariable Long postId, @RequestBody @Valid PostEditRequest postEditRequest) {
         postService.edit(postId, postEditRequest);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
 //    @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
     @DeleteMapping("/posts/{postId}")
     public void delete(@PathVariable Long postId) {

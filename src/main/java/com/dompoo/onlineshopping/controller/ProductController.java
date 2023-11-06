@@ -22,7 +22,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/products")
     public void addProduct(@RequestBody @Valid ProductCreateRequest request, @AuthenticationPrincipal UserPrincipal principal) {
         productService.add(request, principal.getUserId());
@@ -38,13 +38,13 @@ public class ProductController {
         return productService.getList(productSearch);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/products/{productId}")
     public void patch(@PathVariable Long productId, @RequestBody @Valid ProductEditRequest productEditRequest) {
         productService.edit(productId, productEditRequest);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/products/{productId}")
     public void delete(@PathVariable Long productId) {
         productService.delete(productId);
