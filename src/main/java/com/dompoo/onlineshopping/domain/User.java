@@ -33,6 +33,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Product> products = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<ChatMessage> chatMessages = new ArrayList<>();
+
     @Builder
     public User(String name, String email, String password) {
         this.name = name;
