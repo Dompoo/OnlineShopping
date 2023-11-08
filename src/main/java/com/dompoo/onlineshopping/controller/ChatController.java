@@ -1,5 +1,6 @@
 package com.dompoo.onlineshopping.controller;
 
+import com.dompoo.onlineshopping.config.UserPrincipal;
 import com.dompoo.onlineshopping.request.chat.ChatCreateRequest;
 import com.dompoo.onlineshopping.response.ChatResponse;
 import com.dompoo.onlineshopping.service.ChatService;
@@ -7,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,8 @@ public class ChatController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/posts/{roomId}/chat")
-    public void sendChat(@PathVariable Long roomId, @RequestBody @Valid ChatCreateRequest request) {
-        chatService.sendMessage(roomId, request);
+    public void sendChat(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long roomId, @RequestBody @Valid ChatCreateRequest request) {
+        chatService.sendMessage(principal.getUserId(), roomId, request);
     }
 
     @PreAuthorize("isAuthenticated()")

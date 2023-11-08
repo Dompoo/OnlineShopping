@@ -152,11 +152,13 @@ public class ChatControllerDocTest {
         chatMessageRepository.save(ChatMessage.builder()
                 .message("첫번째 채팅!")
                 .chatRoom(savedRoom)
+                .user(addUser)
                 .build());
 
         chatMessageRepository.save(ChatMessage.builder()
                 .message("두번째 채팅!")
                 .chatRoom(savedRoom)
+                .user(addUser)
                 .build());
 
         //expected

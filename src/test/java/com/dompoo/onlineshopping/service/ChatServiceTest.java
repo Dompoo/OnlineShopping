@@ -112,10 +112,10 @@ class ChatServiceTest {
                 .build());
 
         //when
-        chatService.sendMessage(savedRoom.getId(), ChatCreateRequest.builder()
+        chatService.sendMessage(addUser.getId(), savedRoom.getId(), ChatCreateRequest.builder()
                 .message("첫번째 채팅")
                 .build());
-        chatService.sendMessage(savedRoom.getId(), ChatCreateRequest.builder()
+        chatService.sendMessage(addUser.getId(), savedRoom.getId(), ChatCreateRequest.builder()
                 .message("두번째 채팅")
                 .build());
 
@@ -148,7 +148,7 @@ class ChatServiceTest {
 
         //expected
         RoomNotFound e = assertThrows(RoomNotFound.class,
-                () -> chatService.sendMessage(savedRoom.getId() + 1, ChatCreateRequest.builder()
+                () -> chatService.sendMessage(addUser.getId(), savedRoom.getId() + 1, ChatCreateRequest.builder()
                         .message("채팅 내용")
                         .build()));
         assertEquals("존재하지 않는 채팅방입니다.", e.getMessage());
@@ -178,11 +178,13 @@ class ChatServiceTest {
         chatMessageRepository.save(ChatMessage.builder()
                 .chatRoom(savedRoom)
                 .message("첫번째 채팅")
+                .user(addUser)
                 .build());
 
         chatMessageRepository.save(ChatMessage.builder()
                 .chatRoom(savedRoom)
                 .message("두번째 채팅")
+                .user(addUser)
                 .build());
 
         //when
@@ -217,11 +219,13 @@ class ChatServiceTest {
         chatMessageRepository.save(ChatMessage.builder()
                 .chatRoom(savedRoom)
                 .message("첫번째 채팅")
+                .user(addUser)
                 .build());
 
         chatMessageRepository.save(ChatMessage.builder()
                 .chatRoom(savedRoom)
                 .message("두번째 채팅")
+                .user(addUser)
                 .build());
 
         //expected
