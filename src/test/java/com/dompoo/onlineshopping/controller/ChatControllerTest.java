@@ -210,6 +210,8 @@ class ChatControllerTest {
                 .andExpect(jsonPath("$.length()", is(2)))
                 .andExpect(jsonPath("$[0].message").value("첫번째 채팅!"))
                 .andExpect(jsonPath("$[1].message").value("두번째 채팅!"))
+                .andExpect(jsonPath("$[0].username").value("dompoo"))
+                .andExpect(jsonPath("$[1].username").value("dompoo"))
                 .andDo(print());
     }
 

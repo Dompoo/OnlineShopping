@@ -194,6 +194,8 @@ class ChatServiceTest {
         assertEquals(2L, findChats.size());
         assertEquals("첫번째 채팅", findChats.get(0).getMessage());
         assertEquals("두번째 채팅", findChats.get(1).getMessage());
+        assertEquals(addUser.getName(), findChats.get(0).getUsername());
+        assertEquals(addUser.getName(), findChats.get(1).getUsername());
     }
 
     @Test
