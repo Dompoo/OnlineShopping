@@ -1413,9 +1413,9 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 79
+Content-Length: 119
 
-[{"id":1,"message":"첫번째 채팅!"},{"id":2,"message":"두번째 채팅!"}]</code></pre>
+[{"id":1,"message":"첫번째 채팅!","username":"dompoo"},{"id":2,"message":"두번째 채팅!","username":"dompoo"}]</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1441,6 +1441,11 @@ Content-Length: 79
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].message</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">채팅 내용</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].username</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">채팅 작성자</p></td>
 </tr>
 </tbody>
 </table>

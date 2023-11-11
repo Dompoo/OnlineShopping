@@ -174,7 +174,8 @@ public class ChatControllerDocTest {
                         ),
                         responseFields(
                                 fieldWithPath("[].id").description("채팅 ID"),
-                                fieldWithPath("[].message").description("채팅 내용")
+                                fieldWithPath("[].message").description("채팅 내용"),
+                                fieldWithPath("[].username").description("채팅 작성자")
                         )
                 ));
     }
