@@ -20,6 +20,16 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * <pre>
+     * 설명 :
+     * 회원가입을 합니다.
+     *
+     * 동작 :
+     * SignupRequest 클래스를 파라미터로 받고,
+     * email이 중복이라면 예외를 터트리고,
+     * 그 외의 경우에는 password를 인코딩하여 레포지토리에 저장합니다.
+     */
     public void signup(SignupRequest request) {
         Optional<User> findUsers = userRepository.findByEmail(request.getEmail());
         if (findUsers.isPresent()) {
