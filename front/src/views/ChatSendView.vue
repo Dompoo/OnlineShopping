@@ -22,6 +22,6 @@ onMounted(() =>
           message: props.chatMessage
         })
         .then(() =>
-        router.replace({name: "chatRead", state: {roomId: props.roomId}}))
+        router.replace({name: "chatDetail", state: {roomId: props.roomId}}))
 )
 </script>

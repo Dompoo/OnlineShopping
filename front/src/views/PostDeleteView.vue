@@ -17,7 +17,7 @@ const props = defineProps({
 onMounted(() => {
   axios.delete(`/onlineShopping-api/posts/${props.postId}`)
       .then(() => {
-        router.replace({name: "home"});
+        router.replace({name: "postList"});
       });
 })
 </script>

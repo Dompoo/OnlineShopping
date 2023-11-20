@@ -12,10 +12,13 @@ axios.get("/onlineShopping-api/posts?page=1&size=5").then((response) => {
 </script>
 
 <template>
+  <div>
+    <router-link :to="{ name: 'postWrite'}"/>
+  </div>
   <ul>
     <li v-for="post in posts" :key="post.id">
       <div class="title">
-        <router-link :to="{ name: 'read', params: {postId: post.id}}">
+        <router-link :to="{ name: 'postDetail', params: {postId: post.id}}">
           {{post.title}}
         </router-link>
       </div>

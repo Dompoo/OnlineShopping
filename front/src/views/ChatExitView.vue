@@ -10,11 +10,15 @@ const props = defineProps({
     type: [Number, String],
     required: true,
   },
+  postId: {
+    type: [Number, String],
+    required: true,
+  },
 });
 
 onMounted(() => {
   axios.delete(`/onlineShopping-api/chats/${props.roomId}`)
       .then(() =>
-          router.replace({name: "home"}));
+          router.replace({name: "postDetail", state: {postId: props.postId}}));
 });
 </script>

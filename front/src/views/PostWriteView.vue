@@ -15,7 +15,7 @@ const write = function () {
     content: content.value
   })
       .then(() => {
-        router.replace({name: "home"});
+        router.replace({name: "postList"});
       });
 };
 </script>

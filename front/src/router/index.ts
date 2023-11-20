@@ -1,69 +1,102 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import PostWriteView from '@/views/PostWriteView.vue'
-import PostReadView from "@/views/PostReadView.vue";
+import PostDetailView from "@/views/PostDetailView.vue";
 import PostEditView from "@/views/PostEditView.vue";
 import PostDeleteView from "@/views/PostDeleteView.vue";
-import ChatReadView from "@/views/ChatReadView.vue";
+import ChatDetailView from "@/views/ChatDetailView.vue";
 import ChatExitView from "@/views/ChatExitView.vue";
 import ChatRoomCreateView from "@/views/ChatRoomCreateView.vue";
 import ChatSendView from "@/views/ChatSendView.vue";
+import ProductListView from "@/views/ProductListView.vue";
+import ProductDetailView from "@/views/ProductDetailView.vue";
+import ProductEditView from "@/views/ProductEditView.vue";
+import ProductDeleteView from "@/views/ProductDeleteView.vue";
+import ProductWriteView from "@/views/ProductWriteView.vue";
+import PostListView from "@/views/PostListView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
+      name: 'postList',
+      component: PostListView
     },
     {
-      path: '/write',
-      name: 'write',
+      path: '/postWrite',
+      name: 'postWrite',
       component: PostWriteView
     },
     {
-      path: '/read/:postId',
-      name: 'read',
-      component: PostReadView,
+      path: '/postDetail/:postId',
+      name: 'postDetail',
+      component: PostDetailView,
       props: true
     },
     {
-      path: '/edit/:postId',
-      name: 'edit',
+      path: '/postEdit/:postId',
+      name: 'postEdit',
       component: PostEditView,
       props: true
     },
     {
-      path: '/delete/:postId',
-      name: 'delete',
+      path: '/postDelete/:postId',
+      name: 'postDelete',
       component: PostDeleteView,
       props: true
     },
     {
-      path: '/post/:postId',
+      path: '/chatCreate/:postId',
       name: 'chatRoomCreate',
       component: ChatRoomCreateView,
       props: true
     },
     {
-      path: '/send/:roomId',
-      name: 'sendChat',
+      path: '/chatSend/:roomId',
+      name: 'chatSend',
       component: ChatSendView,
       props: true
     },
     {
-      path: '/get/:postId',
-      name: 'chat',
-      component: ChatReadView,
+      path: '/chatDetail/:roomId',
+      name: 'chatDetail',
+      component: ChatDetailView,
       props: true
     },
     {
-      path: '/delete/:',
-      name: 'exitChatRoom',
+      path: '/chatExit/:roomId',
+      name: 'chatRoomExit',
       component: ChatExitView,
       props: true
-    }
+    },
+    {
+      path: '/productList/:productId',
+      name: 'productList',
+      component: ProductListView,
+    },
+    {
+      path: '/productDetail/:productId',
+      name: 'productDetail',
+      component: ProductDetailView,
+      props: true
+    },
+    {
+      path: '/productWrite/:productId',
+      name: 'productWrite',
+      component: ProductWriteView,
+    },
+    {
+      path: '/productEdit/:productId',
+      name: 'productEdit',
+      component: ProductEditView,
+      props: true
+    },
+    {
+      path: '/productDelete/:productId',
+      name: 'productDelete',
+      component: ProductDeleteView,
+      props: true
+    },
   ]
 })
 

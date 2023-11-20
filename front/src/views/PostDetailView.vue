@@ -19,11 +19,11 @@ const post = ref({
 });
 
 const moveToEdit = () => {
-  router.push({name: "edit", state: {posstId: props.postId}})
+  router.push({name: "postEdit", state: {posstId: props.postId}})
 }
 
 const moveToDelete = () => {
-  router.push({name: "delete", state: {postId: props.postId}})
+  router.push({name: "postDelete", state: {postId: props.postId}})
 };
 
 const moveToChatRoom = () => {

@@ -13,6 +13,10 @@ const props = defineProps({
     type: [Number, String],
     require: true,
   },
+  postId: {
+    type: [Number, String],
+    require: true,
+  },
 });
 
 axios.get(`onlineShopping-api/chats/${props.roomId}`).then((response) => {
@@ -22,10 +26,13 @@ axios.get(`onlineShopping-api/chats/${props.roomId}`).then((response) => {
 });
 
 const exit = () => {
-  router.push({name: "exitChatRoom", state: {roomId: props.roomId}})
+  router.push({name: "chatRoomExit", state: {
+      roomId: props.roomId,
+      postId: props.postId,
+  }})
 };
 const sendChat = () => {
-  router.push({name: "sendChat", state: {
+  router.push({name: "chatSend", state: {
       roomId: props.roomId,
       chatMessage: chatMessage.value
     }})

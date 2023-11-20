@@ -29,7 +29,7 @@ const edit = () => {
         title: post.value.title,
         content: post.value.content
       }).then(() => {
-        router.replace({name: "home"});
+        router.replace({name: "postList"});
       });
 };
 

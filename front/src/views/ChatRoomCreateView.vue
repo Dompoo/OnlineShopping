@@ -23,7 +23,7 @@ onMounted(() => {
         room.value = response.data;
       })
       .then(() => {
-        router.replace({name: "chatRead", state: {roomId: room.value}})
+        router.replace({name: "chatDetail", state: {roomId: room.value, postId: props.postId}})
       });
 })
 </script>
