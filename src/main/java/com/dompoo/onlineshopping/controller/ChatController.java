@@ -22,8 +22,8 @@ public class ChatController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/rooms/{postId}")
-    public Long startRoom(@PathVariable Long postId) {
-        return chatService.startChatRoom(postId);
+    public Long startRoom(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long postId) {
+        return chatService.startChatRoom(principal.getUserId(), postId);
     }
 
     @PreAuthorize("isAuthenticated()")

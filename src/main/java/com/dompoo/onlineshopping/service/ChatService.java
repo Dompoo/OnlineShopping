@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,18 +36,27 @@ public class ChatService {
      * 설명 : 채팅방을 개설합니다.
      * 채팅방은 하나의 글에서 첫 대화를 시작할 때 한번만 만들면 됩니다.
      *
-     * 동작 : 채팅방을 개설할 postId가 주어지면 해당 post를 찾고,
-     * ChatRoom 객체를 만들어 저장합니다. 그 후 채팅방 Id를 리턴합니다.
+     * 동작 : 채팅방을 개설할 postId와 로그인한 사용자 userId가 주어지면,
+     * 해당 글과 사용자를 찾고, 이미 개설된 채팅방이 있는지 확인합니다.
+     * 개설된 채팅방이 있다면 이 채팅방의 Id를 리턴하고,
+     * 개설된 채팅방이 없다면 ChatRoom 객체를 만들어 저장하고 Id를 리턴합니다.
      */
-    public Long startChatRoom(Long postId) {
+    public Long startChatRoom(Long userId, Long postId) {
+        User loginUser = userRepository.findById(userId)
+                .orElseThrow(UserNotFound::new);
         Post findPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
 
-        ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoom.builder()
-                .post(findPost)
-                .build());
+        Optional<ChatRoom> findRoom = chatRoomRepository.findByUserAndPost(loginUser, findPost);
+        if (findRoom.isPresent()) {
+            return findRoom.get().getId();
+        } else {
+            ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoom.builder()
+                    .post(findPost)
+                    .build());
 
-        return savedChatRoom.getId();
+            return savedChatRoom.getId();
+        }
     }
 
     /**

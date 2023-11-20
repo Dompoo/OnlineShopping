@@ -25,6 +25,10 @@ public class ChatRoom {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
     public ChatRoom(Post post) {
         setPost(post);
@@ -34,6 +38,11 @@ public class ChatRoom {
     private void setPost(Post post) {
         this.post = post;
         post.getChatRooms().add(this);
+    }
+
+    private void setUser(User user) {
+        this.user = user;
+        user.getChatRooms().add(this);
     }
 
 
