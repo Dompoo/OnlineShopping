@@ -26,6 +26,10 @@ const moveToDelete = () => {
   router.push({name: "delete", state: {postId: props.postId}})
 };
 
+const moveToChatRoom = () => {
+  router.push({name: "chat", state: {postId: props.postId}})
+};
+
 onMounted(() => {
   axios.get(`/onlineShopping-api/posts/${props.postId}`).then((response) => {
     post.value = response.data;
@@ -55,6 +59,7 @@ onMounted(() => {
       <div class="d-flex justify-content-end">
         <el-button type="warning" @click="moveToEdit()">수정</el-button>
         <el-button type="warning" @click="moveToDelete()">삭제</el-button>
+        <el-button type="warning" @click="moveToChatRoom()">채팅</el-button>
       </div>
     </el-col>
   </el-row>

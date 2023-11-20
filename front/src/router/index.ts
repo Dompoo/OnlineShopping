@@ -4,6 +4,7 @@ import PostWriteView from '@/views/PostWriteView.vue'
 import PostReadView from "@/views/PostReadView.vue";
 import PostEditView from "@/views/PostEditView.vue";
 import PostDeleteView from "@/views/PostDeleteView.vue";
+import ChatView from "@/views/ChatView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,12 @@ const router = createRouter({
       path: '/delete/:postId',
       name: 'delete',
       component: PostDeleteView,
+      props: true
+    },
+    {
+      path: '/get/:postId',
+      name: 'chat',
+      component: ChatView,
       props: true
     }
     // {
