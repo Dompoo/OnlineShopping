@@ -4,7 +4,9 @@ import PostWriteView from '@/views/PostWriteView.vue'
 import PostReadView from "@/views/PostReadView.vue";
 import PostEditView from "@/views/PostEditView.vue";
 import PostDeleteView from "@/views/PostDeleteView.vue";
-import ChatView from "@/views/ChatView.vue";
+import ChatReadView from "@/views/ChatReadView.vue";
+import ChatExitView from "@/views/ChatExitView.vue";
+import ChatRoomCreateView from "@/views/ChatRoomCreateView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,19 +40,23 @@ const router = createRouter({
       props: true
     },
     {
+      path: '/post/:postId',
+      name: 'chatRoomCreate',
+      component: ChatRoomCreateView,
+      props: true
+    },
+    {
       path: '/get/:postId',
       name: 'chat',
-      component: ChatView,
+      component: ChatReadView,
+      props: true
+    },
+    {
+      path: '/delete/:',
+      name: 'exitChatRoom',
+      component: ChatExitView,
       props: true
     }
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue')
-    // }
   ]
 })
 

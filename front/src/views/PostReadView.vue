@@ -27,7 +27,7 @@ const moveToDelete = () => {
 };
 
 const moveToChatRoom = () => {
-  router.push({name: "chat", state: {postId: props.postId}})
+  router.push({name: "chatRoomCreate", state: {postId: props.postId}})
 };
 
 onMounted(() => {
