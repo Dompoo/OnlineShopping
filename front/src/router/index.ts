@@ -7,6 +7,7 @@ import PostDeleteView from "@/views/PostDeleteView.vue";
 import ChatReadView from "@/views/ChatReadView.vue";
 import ChatExitView from "@/views/ChatExitView.vue";
 import ChatRoomCreateView from "@/views/ChatRoomCreateView.vue";
+import ChatSendView from "@/views/ChatSendView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,6 +44,12 @@ const router = createRouter({
       path: '/post/:postId',
       name: 'chatRoomCreate',
       component: ChatRoomCreateView,
+      props: true
+    },
+    {
+      path: '/send/:roomId',
+      name: 'sendChat',
+      component: ChatSendView,
       props: true
     },
     {
