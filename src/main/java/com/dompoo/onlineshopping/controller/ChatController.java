@@ -21,26 +21,26 @@ public class ChatController {
     private final ChatService chatService;
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/posts/{postId}/chatRoom")
-    public Long startChat(@PathVariable Long postId) {
+    @PostMapping("/rooms/{postId}")
+    public Long startRoom(@PathVariable Long postId) {
         return chatService.startChatRoom(postId);
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/posts/{roomId}/chat")
+    @PostMapping("/chats/{roomId}")
     public void sendChat(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long roomId, @RequestBody @Valid ChatCreateRequest request) {
         chatService.sendMessage(principal.getUserId(), roomId, request);
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/posts/{roomId}/chat")
+    @GetMapping("/chats/{roomId}")
     public List<ChatResponse> getChatList(@PathVariable Long roomId) {
         return chatService.getMessageList(roomId);
     }
 
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/posts/{roomId}/chat")
-    public void deleteChat(@PathVariable Long roomId) {
+    @DeleteMapping("/chats/{roomId}")
+    public void endRoom(@PathVariable Long roomId) {
         chatService.deleteChatRoom(roomId);
     }
 

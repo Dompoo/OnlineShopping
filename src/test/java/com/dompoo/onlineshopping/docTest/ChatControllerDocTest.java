@@ -74,7 +74,7 @@ public class ChatControllerDocTest {
                 .build());
 
         //expected
-        this.mockMvc.perform(post("/posts/{postId}/chatRoom", savedPost.getId()))
+        this.mockMvc.perform(post("/rooms/{postId}", savedPost.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("chatRoom-craete",
@@ -112,7 +112,7 @@ public class ChatControllerDocTest {
         String json = objectMapper.writeValueAsString(request);
 
         //expected
-        mockMvc.perform(post("/posts/{roomId}/chat", savedRoom.getId())
+        mockMvc.perform(post("/chats/{roomId}", savedRoom.getId())
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
@@ -162,7 +162,7 @@ public class ChatControllerDocTest {
                 .build());
 
         //expected
-        mockMvc.perform(get("/posts/{roomId}/chat", savedRoom.getId()))
+        mockMvc.perform(get("/chats/{roomId}", savedRoom.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(2)))
                 .andExpect(jsonPath("$[0].message").value("첫번째 채팅!"))
@@ -202,7 +202,7 @@ public class ChatControllerDocTest {
                 .build());
 
         //expected
-        mockMvc.perform(delete("/posts/{roomId}/chat", savedRoom.getId()))
+        mockMvc.perform(delete("/chats/{roomId}", savedRoom.getId()))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("chatRoom-delete",

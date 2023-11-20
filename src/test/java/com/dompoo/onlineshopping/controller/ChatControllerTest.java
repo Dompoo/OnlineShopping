@@ -67,7 +67,7 @@ class ChatControllerTest {
                 .build());
 
         //expected
-        mockMvc.perform(post("/posts/{postId}/chatRoom", savedPost.getId()))
+        mockMvc.perform(post("/rooms/{postId}", savedPost.getId()))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -90,7 +90,7 @@ class ChatControllerTest {
                 .build());
 
         //expected
-        mockMvc.perform(post("/posts/{postId}/chatRoom", savedPost.getId() + 1))
+        mockMvc.perform(post("/rooms/{postId}", savedPost.getId() + 1))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("404"))
                 .andExpect(jsonPath("$.message").value("존재하지 않는 글입니다."))
@@ -125,7 +125,7 @@ class ChatControllerTest {
         String json = objectMapper.writeValueAsString(request);
 
         //expected
-        mockMvc.perform(post("/posts/{roomId}/chat", savedRoom.getId())
+        mockMvc.perform(post("/chats/{roomId}", savedRoom.getId())
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
@@ -161,7 +161,7 @@ class ChatControllerTest {
         String json = objectMapper.writeValueAsString(request);
 
         //expected
-        mockMvc.perform(post("/posts/{roomId}/chat", savedRoom.getId() + 1)
+        mockMvc.perform(post("/chats/{roomId}", savedRoom.getId() + 1)
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
@@ -205,7 +205,7 @@ class ChatControllerTest {
                 .build());
 
         //expected
-        mockMvc.perform(get("/posts/{roomId}/chat", savedRoom.getId()))
+        mockMvc.perform(get("/chats/{roomId}", savedRoom.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(2)))
                 .andExpect(jsonPath("$[0].message").value("첫번째 채팅!"))
@@ -249,7 +249,7 @@ class ChatControllerTest {
                 .build());
 
         //expected
-        mockMvc.perform(get("/posts/{roomId}/chat", savedRoom.getId() + 1))
+        mockMvc.perform(get("/chats/{roomId}", savedRoom.getId() + 1))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("존재하지 않는 채팅방입니다."))
                 .andExpect(jsonPath("$.code").value("404"))
@@ -278,7 +278,7 @@ class ChatControllerTest {
                 .build());
 
         //expected
-        mockMvc.perform(delete("/posts/{roomId}/chat", savedRoom.getId()))
+        mockMvc.perform(delete("/chats/{roomId}", savedRoom.getId()))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -305,7 +305,7 @@ class ChatControllerTest {
                 .build());
 
         //expected
-        mockMvc.perform(delete("/posts/{roomId}/chat", savedRoom.getId() + 1))
+        mockMvc.perform(delete("/chats/{roomId}", savedRoom.getId() + 1))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("존재하지 않는 채팅방입니다."))
                 .andExpect(jsonPath("$.code").value("404"))
