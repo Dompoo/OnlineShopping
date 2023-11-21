@@ -5,7 +5,12 @@ import {useRouter} from "vue-router";
 
 const router = useRouter();
 
-const chats = ref([]);
+const chats = ref([{
+  id: 0,
+  username: "",
+  message: "",
+  createdAt: "",
+}]);
 const chatMessage = ref([]);
 
 const props = defineProps({
@@ -39,12 +44,34 @@ const sendChat = () => {
 };
 
 </script>
-<!--TODO : 땡겨온 chats정보를 뿌리기-->
+<!--TODO : 땡겨온 chats정보를 뿌리기 - 메시지, 유저명, 날짜-->
 <template>
-  <el-input v-model="chatMessage" placeholder="메시지를 입력하세요."/>
-  <el-button type="warning" @click="sendChat">채팅 보내기</el-button>
-
-  <el-button type="warning" @click="exit()">채팅방 나가기</el-button>
+  <ul>
+    <li v-for="chat in chats" :key="chat.id">
+      <div class="username">
+        {{chat.username}}
+      </div>
+      <div class="message">
+        {{chat.message}}
+      </div>
+      <div class="createdAt">
+        {{chat.createdAt}}
+      </div>
+    </li>
+  </ul>
+  <el-row>
+    <el-col>
+      <el-button type="warning" @click="sendChat">채팅 보내기</el-button>
+    </el-col>
+    <el-col>
+      <el-button type="warning" @click="exit()">채팅방 나가기</el-button>
+    </el-col>
+  </el-row>
+  <el-row>
+    <el-col>
+    <el-input v-model="chatMessage" placeholder="메시지를 입력하세요."/>
+    </el-col>
+  </el-row>
 </template>
 <style>
 
