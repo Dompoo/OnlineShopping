@@ -6,7 +6,11 @@ import {ref} from "vue";
 
 const router = useRouter();
 
-const products = ref([]);
+const products = ref([{
+  id: 0,
+  productName: "",
+  price: 0,
+}]);
 
 // 상품 리스트 조회
 axios.get("/onlineShopping-api/products?page=1&size=5").then((response) => {
@@ -22,14 +26,14 @@ axios.get("/onlineShopping-api/products?page=1&size=5").then((response) => {
   </div>
   <ul>
     <li v-for="product in products" :key="product.id">
-      <div class="title">
+      <div class="productName">
         <router-link :to="{ name: 'productDetail', params: {productId: product.id}}">
-<!--          상품 이름-->
+          {{product.productName}}
         </router-link>
       </div>
 
-      <div class="content">
-        {{product.content}}
+      <div class="price">
+        {{product.price}}
       </div>
     </li>
 
