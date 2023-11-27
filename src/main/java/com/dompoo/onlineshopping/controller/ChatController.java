@@ -34,8 +34,8 @@ public class ChatController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/chats/{roomId}")
-    public List<ChatResponse> getChatList(@PathVariable Long roomId) {
-        return chatService.getMessageList(roomId);
+    public List<ChatResponse> getChatList(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long roomId) {
+        return chatService.getMessageList(principal.getUserId(), roomId);
     }
 
     @PreAuthorize("isAuthenticated()")

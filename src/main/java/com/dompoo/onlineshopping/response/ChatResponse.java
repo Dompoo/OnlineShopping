@@ -1,7 +1,5 @@
 package com.dompoo.onlineshopping.response;
 
-import com.dompoo.onlineshopping.domain.ChatMessage;
-import com.dompoo.onlineshopping.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,19 +12,14 @@ public class ChatResponse {
     private final String message;
     private final String username;
     private final LocalDateTime createdAt;
-
-    public ChatResponse(ChatMessage message) {
-        this.id = message.getId();
-        this.message = message.getMessage();
-        this.username = message.getUser().getName();
-        this.createdAt = message.getCreatedAt();
-    }
+    private final Boolean displayRight;
 
     @Builder
-    public ChatResponse(Long id, String message, User user) {
+    public ChatResponse(Long id, String message, String username, Boolean isLoginUser) {
         this.id = id;
         this.message = message;
-        this.username = user.getName();
+        this.username = username;
         this.createdAt = LocalDateTime.now();
+        this.displayRight = isLoginUser;
     }
 }

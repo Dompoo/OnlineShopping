@@ -16,11 +16,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ChatServiceTest {
@@ -59,7 +59,7 @@ class ChatServiceTest {
                 .build());
 
         //when
-        Long convId = chatService.startChatRoom(savedPost.getId());
+        Long convId = chatService.startChatRoom(addUser.getId(), savedPost.getId());
 
         //then
         assertEquals(1L, chatRoomRepository.count());
@@ -84,7 +84,7 @@ class ChatServiceTest {
 
         //expected
         PostNotFound e = assertThrows(PostNotFound.class,
-                () -> chatService.startChatRoom(savedPost.getId() + 1));
+                () -> chatService.startChatRoom(addUser.getId(), savedPost.getId() + 1));
         assertEquals("존재하지 않는 글입니다.", e.getMessage());
         assertEquals("404", e.statusCode());
 
@@ -188,7 +188,7 @@ class ChatServiceTest {
                 .build());
 
         //when
-        List<ChatResponse> findChats = chatService.getMessageList(savedRoom.getId());
+        List<ChatResponse> findChats = chatService.getMessageList(addUser.getId(), savedRoom.getId());
 
         //then
         assertEquals(2L, findChats.size());
@@ -196,9 +196,12 @@ class ChatServiceTest {
         assertEquals("두번째 채팅", findChats.get(1).getMessage());
         assertEquals(addUser.getName(), findChats.get(0).getUsername());
         assertEquals(addUser.getName(), findChats.get(1).getUsername());
+        assertTrue(findChats.get(0).getDisplayRight());
+        assertTrue(findChats.get(1).getDisplayRight());
     }
 
     @Test
+    @Transactional
     @DisplayName("채팅리스트 조회 실패")
     void getChatListFail() {
         //given
@@ -232,7 +235,7 @@ class ChatServiceTest {
 
         //expected
         RoomNotFound e = assertThrows(RoomNotFound.class,
-                () -> chatService.getMessageList(savedRoom.getId() + 1));
+                () -> chatService.getMessageList(addUser.getId(), savedRoom.getId() + 1));
         assertEquals("존재하지 않는 채팅방입니다.", e.getMessage());
         assertEquals("404", e.statusCode());
 

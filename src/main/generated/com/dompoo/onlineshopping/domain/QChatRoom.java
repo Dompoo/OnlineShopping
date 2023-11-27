@@ -28,6 +28,8 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public final QPost post;
 
+    public final QUser user;
+
     public QChatRoom(String variable) {
         this(ChatRoom.class, forVariable(variable), INITS);
     }
@@ -47,6 +49,7 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
     public QChatRoom(Class<? extends ChatRoom> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.post = inits.isInitialized("post") ? new QPost(forProperty("post"), inits.get("post")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
 }

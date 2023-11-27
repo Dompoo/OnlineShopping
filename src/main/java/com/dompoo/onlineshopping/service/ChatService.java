@@ -86,17 +86,25 @@ public class ChatService {
      * 설명 : 채팅리스트를 조회합니다.
      * 채팅리스트는 일반적으로 채팅방에 들어가면 나오는 정보이며,
      * 리턴 객체에 username, message 등이 들어갑니다.
+     * 또한 현재 로그인한 유저의 Id와 메시지를 작성한 유저의 Id를 비교하여 isLoginUser 값을 넣어줍니다.
      *
      * 동작 : 채팅방의 roomId가 주어지면, 먼저 채팅방이 있는지 확인하고,
      * 해당 채팅방의 ChatMessage 객체들을 생성날짜 순으로 조회합니다.
      * 그 후 List로 매핑하여 리턴합니다.
      */
-    public List<ChatResponse> getMessageList(Long roomId) {
+    public List<ChatResponse> getMessageList(Long userId, Long roomId) {
         chatRoomRepository.findById(roomId)
                 .orElseThrow(RoomNotFound::new);
 
         return chatMessageRepository.findByChatRoom_IdOrderByCreatedAtAsc(roomId)
-                .stream().map(ChatResponse::new).toList();
+                .stream().map(chat ->
+                        ChatResponse.builder()
+                                .id(chat.getId())
+                                .message(chat.getMessage())
+                                .username(chat.getUser().getName())
+                                .isLoginUser(chat.getUser().getId().equals(userId))
+                                .build())
+                .toList();
     }
 
     /**
