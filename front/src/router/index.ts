@@ -13,6 +13,7 @@ import ProductEditView from "@/views/ProductEditView.vue";
 import ProductDeleteView from "@/views/ProductDeleteView.vue";
 import ProductWriteView from "@/views/ProductWriteView.vue";
 import PostListView from "@/views/PostListView.vue";
+import Login from "@/views/Login.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -81,7 +82,7 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/productWrite/:productId',
+      path: '/productWrite',
       name: 'productWrite',
       component: ProductWriteView,
     },
@@ -95,6 +96,12 @@ const router = createRouter({
       path: '/productDelete/:productId',
       name: 'productDelete',
       component: ProductDeleteView,
+      props: true
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
       props: true
     },
   ]

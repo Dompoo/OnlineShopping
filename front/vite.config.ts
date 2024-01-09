@@ -17,7 +17,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/onlineShopping-api/posts": {
+      "/onlineShopping-api": {
         target: "http://localhost:8080",
         rewrite: path => path.replace(/^\/onlineShopping-api/, "")}
     },
