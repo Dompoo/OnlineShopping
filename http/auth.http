@@ -16,3 +16,6 @@ Content-Type: application/json
   "email": "dompoo@gmail.com",
   "password": "1234"
 }
+
+### 로그아웃
+POST http://localhost:8080/auth/logout

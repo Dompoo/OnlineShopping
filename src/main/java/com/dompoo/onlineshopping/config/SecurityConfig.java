@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,7 +31,6 @@ import static org.springframework.security.web.header.writers.frameoptions.XFram
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -51,9 +49,14 @@ public class SecurityConfig {
                         .accessDeniedHandler(new Http403Handler(objectMapper))
                         .authenticationEntryPoint(new Http401Handler(objectMapper)))
                 .rememberMe(rm -> rm
-                        .rememberMeParameter("remember")
+                        .rememberMeParameter("remember-me")
                         .alwaysRemember(false)
-                        .tokenValiditySeconds(2592000));
+                        .tokenValiditySeconds(2592000))
+                .logout((logout) -> logout
+                        .logoutUrl("auth/logout")
+                        .logoutSuccessUrl("/auth/login")
+                        .deleteCookies("JSESSIONID", "remember-me")
+                );
 
         return http.build();
     }
