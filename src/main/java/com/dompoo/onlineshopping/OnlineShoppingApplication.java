@@ -1,8 +1,5 @@
 package com.dompoo.onlineshopping;
 
-import com.dompoo.onlineshopping.domain.Post;
-import com.dompoo.onlineshopping.domain.Product;
-import com.dompoo.onlineshopping.domain.User;
 import com.dompoo.onlineshopping.repository.ChatMessageRepository;
 import com.dompoo.onlineshopping.repository.ChatRoomRepository;
 import com.dompoo.onlineshopping.repository.UserRepository;
@@ -38,26 +35,26 @@ public class OnlineShoppingApplication {
 
         @PostConstruct
         public void init() {
-            log.info("테스트 데이터 init");
-
-            User savedUser = userRepository.save(User.builder()
-                    .email("dompoo@gmail.com")
-                    .name("dompoo")
-                    .password(encoder.encode("1234"))
-                    .build());
-
-            Product savedProduct = productRepository.save(Product.builder()
-                    .productName("플스")
-                    .price(120000)
-                    .user(savedUser)
-                    .build());
-
-            postRepository.save(Post.builder()
-                    .title("플스 팝니다")
-                    .content("플스 팔아요 10만언")
-                    .product(savedProduct)
-                    .user(savedUser)
-                    .build());
+//            log.info("테스트 데이터 init");
+//
+//            User savedUser = userRepository.save(User.builder()
+//                    .email("dompoo@gmail.com")
+//                    .name("dompoo")
+//                    .password(encoder.encode("1234"))
+//                    .build());
+//
+//            Product savedProduct = productRepository.save(Product.builder()
+//                    .productName("플스")
+//                    .price(120000)
+//                    .user(savedUser)
+//                    .build());
+//
+//            postRepository.save(Post.builder()
+//                    .title("플스 팝니다")
+//                    .content("플스 팔아요 10만언")
+//                    .product(savedProduct)
+//                    .user(savedUser)
+//                    .build());
         }
     }
 }

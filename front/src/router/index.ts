@@ -14,6 +14,7 @@ import ProductDeleteView from "@/views/ProductDeleteView.vue";
 import ProductWriteView from "@/views/ProductWriteView.vue";
 import PostListView from "@/views/PostListView.vue";
 import Login from "@/views/Login.vue";
+import Signup from "@/views/Signup.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -102,7 +103,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login,
-      props: true
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: Signup,
     },
   ]
 })
