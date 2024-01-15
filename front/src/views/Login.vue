@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from 'vue'
 
-import axios from 'axios';
-import {useRouter} from "vue-router";
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { useStore } from '@/router'
 
 const email = ref("")
 const password = ref("")
 
 const router = useRouter();
+const store = useStore();
 
 const login = function () {
   axios.post("/onlineShopping-api/auth/login", {
     email: email.value,
     password: password.value
   })
+      .then((response) => {
+        if (response.status == 200) {
+          store.commit('setLoggedIn', true);
+        }
+      })
       .then(() => {
         router.replace({name: "postList"});
       });

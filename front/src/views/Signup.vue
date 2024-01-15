@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from 'vue'
 
-import axios from 'axios';
-import {useRouter} from "vue-router";
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { useStore } from '@/router'
 
 const name = ref("")
 const email = ref("")
 const password = ref("")
 
 const router = useRouter();
+const store = useStore();
 
 const signup = function () {
   axios.post("/onlineShopping-api/auth/signup", {
@@ -17,7 +19,7 @@ const signup = function () {
     password: password.value
   })
       .then(() => {
-        router.replace({name: "postList"});
+        router.replace({name: "login"});
       });
 };
 </script>

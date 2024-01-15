@@ -1,20 +1,41 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import PostWriteView from '@/views/PostWriteView.vue'
-import PostDetailView from "@/views/PostDetailView.vue";
-import PostEditView from "@/views/PostEditView.vue";
-import PostDeleteView from "@/views/PostDeleteView.vue";
-import ChatDetailView from "@/views/ChatDetailView.vue";
-import ChatExitView from "@/views/ChatExitView.vue";
-import ChatRoomCreateView from "@/views/ChatRoomCreateView.vue";
-import ChatSendView from "@/views/ChatSendView.vue";
-import ProductListView from "@/views/ProductListView.vue";
-import ProductDetailView from "@/views/ProductDetailView.vue";
-import ProductEditView from "@/views/ProductEditView.vue";
-import ProductDeleteView from "@/views/ProductDeleteView.vue";
-import ProductWriteView from "@/views/ProductWriteView.vue";
-import PostListView from "@/views/PostListView.vue";
-import Login from "@/views/Login.vue";
-import Signup from "@/views/Signup.vue";
+import PostDetailView from '@/views/PostDetailView.vue'
+import PostEditView from '@/views/PostEditView.vue'
+import PostDeleteView from '@/views/PostDeleteView.vue'
+import ChatDetailView from '@/views/ChatDetailView.vue'
+import ChatExitView from '@/views/ChatExitView.vue'
+import ChatRoomCreateView from '@/views/ChatRoomCreateView.vue'
+import ChatSendView from '@/views/ChatSendView.vue'
+import ProductListView from '@/views/ProductListView.vue'
+import ProductDetailView from '@/views/ProductDetailView.vue'
+import ProductEditView from '@/views/ProductEditView.vue'
+import ProductDeleteView from '@/views/ProductDeleteView.vue'
+import ProductWriteView from '@/views/ProductWriteView.vue'
+import PostListView from '@/views/PostListView.vue'
+import Login from '@/views/Login.vue'
+import Signup from '@/views/Signup.vue'
+import type { Store } from 'vuex'
+import { createStore } from 'vuex'
+
+interface RootState {
+  isLoggedIn: boolean;
+}
+
+const store = createStore<RootState>({
+  state: {
+    isLoggedIn: false,
+  },
+  mutations: {
+    setLoggedIn(state, value: boolean) {
+      state.isLoggedIn = value;
+    },
+  }
+});
+
+export function useStore(): Store<RootState> {
+  return store as Store<RootState>;
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
