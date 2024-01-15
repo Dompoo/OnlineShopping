@@ -17,6 +17,7 @@ import Login from '@/views/Login.vue'
 import Signup from '@/views/Signup.vue'
 import type { Store } from 'vuex'
 import { createStore } from 'vuex'
+import Logout from '@/views/Logout.vue'
 
 interface RootState {
   isLoggedIn: boolean;
@@ -93,7 +94,7 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/productList/:productId',
+      path: '/productList',
       name: 'productList',
       component: ProductListView,
     },
@@ -129,6 +130,11 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: Signup,
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: Logout,
     },
   ]
 })

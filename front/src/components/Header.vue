@@ -23,6 +23,7 @@ store.watch(() => store.state.isLoggedIn, (newValue) => {
       <el-menu-item index="/productWrite">상품 등록</el-menu-item>
       <el-menu-item v-show="!isLoggedIn" index="/login">로그인</el-menu-item>
       <el-menu-item v-show="!isLoggedIn" index="/signup">회원가입</el-menu-item>
+      <el-menu-item v-show="isLoggedIn" index="/logout">로그아웃</el-menu-item>
 
     </el-menu>
   </el-header>
