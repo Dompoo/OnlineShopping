@@ -15,28 +15,7 @@ import ProductWriteView from '@/views/ProductWriteView.vue'
 import PostListView from '@/views/PostListView.vue'
 import Login from '@/views/Login.vue'
 import Signup from '@/views/Signup.vue'
-import type { Store } from 'vuex'
-import { createStore } from 'vuex'
 import Logout from '@/views/Logout.vue'
-
-interface RootState {
-  isLoggedIn: boolean;
-}
-
-const store = createStore<RootState>({
-  state: {
-    isLoggedIn: false,
-  },
-  mutations: {
-    setLoggedIn(state, value: boolean) {
-      state.isLoggedIn = value;
-    },
-  }
-});
-
-export function useStore(): Store<RootState> {
-  return store as Store<RootState>;
-}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

@@ -3,14 +3,12 @@ import { ref } from 'vue'
 
 import axios from 'axios'
 import { useRouter } from 'vue-router'
-import { useStore } from '@/router'
 
 const name = ref("")
 const email = ref("")
 const password = ref("")
 
 const router = useRouter();
-const store = useStore();
 
 const signup = function () {
   axios.post("/onlineShopping-api/auth/signup", {
